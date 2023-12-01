@@ -11,4 +11,5 @@ const userDetail=createSlice({
             },
     }
 })
+
 export default userDetail.reducer
