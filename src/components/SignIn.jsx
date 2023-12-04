@@ -1,6 +1,6 @@
 import { Box, Button, Stack, TextField, Typography } from "@mui/material";
 import { useFormik } from "formik";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { NavLink } from "react-router-dom";
 import { signInScheema } from "../schemas";
 import "../components/stylecss/style.css";
@@ -8,8 +8,10 @@ import { useDispatch, useSelector } from "react-redux";
 import { resetReducer, signInApi } from "../redux/Slices/signinSlice";
 import CircularProgress from "@mui/material/CircularProgress";
 import { jwtDecode } from "jwt-decode";
+import { ToastContainer, toast } from "react-toastify";
 
 const SignIn = () => {
+  const [buttonDisable, setButtonDisable] = useState(false)
   const dispatch = useDispatch();
   const signinSlice = useSelector((state) => state.signIn);
   const status = signinSlice.loading;
@@ -20,7 +22,13 @@ const SignIn = () => {
       localStorage.setItem("role", decode.role);
       dispatch(resetReducer());
       console.log(decode);
+      
     }
+    else if (signinSlice.data.error === 1) {
+      toast.error("user does not exist!",{autoClose: 1000});
+      setButtonDisable(false)
+    }
+    dispatch(resetReducer());
   }, [signinSlice.isSuccess]);
   const formik = useFormik({
     initialValues: { name: "", password: "" },
@@ -99,6 +107,7 @@ const SignIn = () => {
           </NavLink>
         </Stack>
       </Box>
+      <ToastContainer/>
     </>
   );
 };

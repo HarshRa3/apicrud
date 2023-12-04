@@ -24,14 +24,14 @@ const SignUp = () => {
 
   const dispatch = useDispatch();
   const signupSlice = useSelector((state) => state.signUp);
-  console.log(signupSlice);
+  // console.log(signupSlice);
   useEffect(() => {
     if (signupSlice.data.error === 1) {
       toast.error("User already exits !!!!!");
       dispatch(resetReducer());
     } else if (signupSlice.data.error === 0) {
-      toast.success("signUp successfully");
       navigate("/");
+      toast.success("signUp successfully");
       dispatch(resetReducer());
     }
   }, [signupSlice.isSuccess]);
@@ -44,16 +44,11 @@ const SignUp = () => {
     validationSchema: signUpSchema,
     onSubmit: (values) => {
       try {
-        if (values.name.length < 5) {
-          console.log("error");
-        } else if (values.password.length < 5) {
-          console.log("error");
-        } else {
           dispatch(signUpApi(values));
           console.log(signUpApi(values));
           dispatch(resetReducer());
         }
-      } catch (error) {
+      catch (error) {
         dispatch(resetReducer());
       }
     },
@@ -141,6 +136,7 @@ const SignUp = () => {
           </Box>
         </Stack>
       </Box>
+      <ToastContainer/>
     </>
   );
 };
