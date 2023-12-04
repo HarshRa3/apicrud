@@ -1,4 +1,14 @@
-import {Box,Button,FormControl,InputLabel,MenuItem,Select,Stack,TextField,Typography,} from "@mui/material";
+import {
+  Box,
+  Button,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Select,
+  Stack,
+  TextField,
+  Typography,
+} from "@mui/material";
 import { useFormik } from "formik";
 import React, { useEffect } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
@@ -6,8 +16,8 @@ import { signUpSchema } from "../schemas";
 import "../components/stylecss/style.css";
 import { useDispatch, useSelector } from "react-redux";
 import { resetReducer, signUpApi } from "../redux/Slices/signupSlice";
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const SignUp = () => {
   const navigate = useNavigate();
@@ -17,10 +27,10 @@ const SignUp = () => {
   console.log(signupSlice);
   useEffect(() => {
     if (signupSlice.data.error === 1) {
-      toast.error("User already exits !!!!!")
+      toast.error("User already exits !!!!!");
       dispatch(resetReducer());
     } else if (signupSlice.data.error === 0) {
-      toast.success('signUp successfully')
+      toast.success("signUp successfully");
       navigate("/");
       dispatch(resetReducer());
     }
@@ -51,15 +61,9 @@ const SignUp = () => {
 
   return (
     <>
-    <ToastContainer/>
-      <Box
-        className="formBodyStyle"
-      >
-        <Stack
-          direction={"column"}
-          spacing={2}
-          className="form_container"
-        >
+      <ToastContainer />
+      <Box className="formBodyStyle">
+        <Stack direction={"column"} spacing={2} className="form_container">
           <Typography variant="h3">SIGN UP</Typography>
           <Stack
             sx={{ width: "100%", fontSize: "19px" }}
@@ -69,11 +73,11 @@ const SignUp = () => {
             onSubmit={formik.handleSubmit} // It is for Submittion of SignIn form
           >
             <Typography variant="h6" sx={{ textAlign: "left" }}>
-              Name :
+              User Name :
             </Typography>
             <TextField
               fullWidth
-              label="Name"
+              label="User Name"
               type="name"
               name="name"
               value={formik.values.name}
