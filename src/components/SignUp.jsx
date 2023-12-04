@@ -14,11 +14,13 @@ const SignUp = () => {
 
   const dispatch = useDispatch();
   const signupSlice = useSelector((state) => state.signUp);
+  console.log(signupSlice);
   useEffect(() => {
     if (signupSlice.data.error === 1) {
-      toast.error("User already exits !!!!!!")
+      toast.error("User already exits !!!!!")
       dispatch(resetReducer());
     } else if (signupSlice.data.error === 0) {
+      toast.success('signUp successfully')
       navigate("/");
       dispatch(resetReducer());
     }
@@ -51,13 +53,11 @@ const SignUp = () => {
     <>
     <ToastContainer/>
       <Box
-        // sx={formBodyStyle}
         className="formBodyStyle"
       >
         <Stack
           direction={"column"}
           spacing={2}
-          // sx={formContainerStyle}
           className="form_container"
         >
           <Typography variant="h3">SIGN UP</Typography>

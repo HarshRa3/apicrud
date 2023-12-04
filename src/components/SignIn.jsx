@@ -1,23 +1,42 @@
 import { Box, Button, Stack, TextField, Typography } from "@mui/material";
 import { useFormik } from "formik";
-import React from "react";
+import React, { useEffect } from "react";
 import { NavLink } from "react-router-dom";
 import { signInScheema } from "../schemas";
 import "../components/stylecss/style.css"
+import { useDispatch, useSelector } from "react-redux";
+import { resetReducer, signInApi } from "../redux/Slices/signinSlice";
+import CircularProgress from '@mui/material/CircularProgress';
+import { jwtDecode } from "jwt-decode";
 const SignIn = () => {
+  const dispatch=useDispatch()
+  const signinSlice=useSelector(state=>state.signIn)
+  const status=signinSlice.loading
+  useEffect(()=>{
+    if(signinSlice.isSuccess && signinSlice.data.token){
+      const decode=jwtDecode(signinSlice.data.token);
+      localStorage.setItem('token',signinSlice.data.token);
+      localStorage.setItem('role',decode.role);
+      dispatch(resetReducer())
+      console.log(decode);
+    }
+  },[signinSlice.isSuccess])
   const formik = useFormik({
     initialValues: { name: "", password: "" },
     validationSchema: signInScheema,
     onSubmit: (values) => {
-      console.log(values);
+      try{
+        if(!signinSlice.data.token){
+          dispatch(resetReducer())
+        }
+        dispatch(signInApi(values))
+      }catch(error){}
     },
   });
-
-  return (
+ return (
     <>
       <Box
-        // sx={formBodyStyle}
-        className='formBodyStyle'
+      className='formBodyStyle'
       >
         <Stack
           direction={"column"}
@@ -70,9 +89,18 @@ const SignIn = () => {
                 </Typography>
               }
             />
-            <Button variant="contained" type="submit">
+            {
+              status?(
+                <Box sx={{display:'flex',justifyContent:'center'}} >
+
+              <CircularProgress/>
+                </Box>
+              )
+              :(<Button variant="contained" type="submit">
               Sign In
-            </Button>
+            </Button>)
+            }
+            
           </Stack>
           <NavLink style={{ color: "#1565c0" }} to={"/signup"} variant="body2">
             Don't have account?Register now
