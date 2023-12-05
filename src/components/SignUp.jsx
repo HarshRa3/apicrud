@@ -14,16 +14,16 @@ import React, { useEffect, useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { signUpSchema } from "../schemas";
 import "../components/stylecss/style.css";
-import { useDispatch, useSelector } from "react-redux";
+import {  useSelector } from "react-redux";
 import { resetReducer, signUpApi, startLoading } from "../redux/Slices/signupSlice";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import CircularProgress from '@mui/material/CircularProgress';
+import { dispatch } from "../redux/store";
 
 const SignUp = () => {
   const navigate = useNavigate();
   const [buttonDisable, setButtonDisable] = useState(false);
-  const dispatch = useDispatch();
   const signupSlice = useSelector((state) => state.signUp);
   const statuS = signupSlice.loading;
   console.log(statuS);
@@ -62,12 +62,12 @@ const SignUp = () => {
     <>
       <ToastContainer />
       <Box className="formBodyStyle">
-        <Stack direction={"column"} spacing={2} className="form_container">
+        <Stack direction={"column"} className="form_container">
           <Typography variant="h3">SIGN UP</Typography>
           <Stack
             sx={{ width: "100%", fontSize: "19px" }}
             direction={"column"}
-            spacing={2}
+            spacing={1}
             component="form"
             onSubmit={formik.handleSubmit} // It is for Submittion of SignIn form
           >
