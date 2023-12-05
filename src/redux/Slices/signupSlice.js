@@ -1,16 +1,15 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { dispatch } from "../store";
 import Instance from "../Axios/Instance";
 
 const initialState = {
   loading: false,
   isError: false,
   isSuccess: false,
-  data: [],
+  data: {},
 };
 
 const signUp = createSlice({
-  name: "signup",
+  name: "signUp",
   initialState: initialState,
   reducers: {
     startLoading: (state) => {
@@ -38,19 +37,16 @@ const signUp = createSlice({
   },
 });
 
-export const signUpApi = async (payload) => {
-  dispatch(startLoading());
+export const signUpApi = (payload) => async (dispatch) => {
   try {
     let response = await Instance.post(
-      `add_user?username=${payload.name}&password=${payload.password}&role=${payload.role}`,{payload}
+      `add_user?username=${payload.name}&password=${payload.password}&role=${payload.role}`
     );
     dispatch(signUp.actions.loginSuccessful(response.data));
-    console.log(response.data);
   } catch (e) {
     dispatch(signUp.actions.hasError(e));
   }
 };
-export const { startLoading, loginSuccessful, hasError, resetReducer } =
-  signUp.actions;
+export const { startLoading, loginSuccessful, hasError, resetReducer } = signUp.actions;
 
 export default signUp.reducer;

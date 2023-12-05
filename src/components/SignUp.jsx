@@ -10,45 +10,49 @@ import {
   Typography,
 } from "@mui/material";
 import { useFormik } from "formik";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { signUpSchema } from "../schemas";
 import "../components/stylecss/style.css";
 import { useDispatch, useSelector } from "react-redux";
-import { resetReducer, signUpApi } from "../redux/Slices/signupSlice";
+import { resetReducer, signUpApi, startLoading } from "../redux/Slices/signupSlice";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import CircularProgress from '@mui/material/CircularProgress';
 
 const SignUp = () => {
   const navigate = useNavigate();
-
+  const [buttonDisable, setButtonDisable] = useState(false);
   const dispatch = useDispatch();
   const signupSlice = useSelector((state) => state.signUp);
-  // console.log(signupSlice);
+  const statuS = signupSlice.loading;
+  console.log(statuS);
   useEffect(() => {
     if (signupSlice.data.error === 1) {
-      toast.error("User already exits !!!!!");
+      toast.error("User already exists!");
+      setButtonDisable(false);
       dispatch(resetReducer());
     } else if (signupSlice.data.error === 0) {
       navigate("/");
-      toast.success("signUp successfully");
+      toast.success("Sign up successful");
+      setButtonDisable(true);
       dispatch(resetReducer());
     }
   }, [signupSlice.isSuccess]);
+
   const formik = useFormik({
     initialValues: {
       name: "",
       password: "",
+      confirm_password: "",
       role: "Guest",
     },
     validationSchema: signUpSchema,
     onSubmit: (values) => {
       try {
-          dispatch(signUpApi(values));
-          console.log(signUpApi(values));
-          dispatch(resetReducer());
-        }
-      catch (error) {
+        dispatch(startLoading()); 
+        dispatch(signUpApi(values));
+      } catch (error) {
         dispatch(resetReducer());
       }
     },
@@ -105,6 +109,25 @@ const SignUp = () => {
                 </Typography>
               }
             />
+            <Typography variant="h6" sx={{ textAlign: "left" }}>
+              Confirm Password :
+            </Typography>
+            <TextField
+              fullWidth
+              label="Confirm Password"
+              type="password"
+              name="confirm_password"
+              value={formik.values.confirm_password}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              helperText={
+                <Typography variant="p" color={"red"}>
+                  {formik.errors.confirm_password &&
+                    formik.touched.confirm_password &&
+                    formik.errors.confirm_password}
+                </Typography>
+              }
+            />
             <Box>
               <Typography variant="h6" sx={{ textAlign: "left", mb: "10px" }}>
                 Role :
@@ -125,9 +148,20 @@ const SignUp = () => {
                 </Select>
               </FormControl>
             </Box>
-            <Button variant="contained" type="submit">
-              Sign up
-            </Button>
+
+            {statuS ? (
+              <Box sx={{ display: "flex", justifyContent: "center" }}>
+                <CircularProgress />
+              </Box>
+            ) : (
+              <Button
+                variant="contained"
+                type="submit"
+                disabled={buttonDisable}
+              >
+                Sign Up
+              </Button>
+            )}
           </Stack>
           <Box>
             <NavLink style={{ color: "#1565c0" }} to={"/"} variant="body2">
@@ -136,7 +170,7 @@ const SignUp = () => {
           </Box>
         </Stack>
       </Box>
-      <ToastContainer/>
+      <ToastContainer />
     </>
   );
 };

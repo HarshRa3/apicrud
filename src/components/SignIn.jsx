@@ -6,7 +6,7 @@ import { signInScheema } from "../schemas";
 import "../components/stylecss/style.css";
 import { useDispatch, useSelector } from "react-redux";
 import { resetReducer, signInApi } from "../redux/Slices/signinSlice";
-import CircularProgress from "@mui/material/CircularProgress";
+import CircularProgress from '@mui/material/CircularProgress';
 import { jwtDecode } from "jwt-decode";
 import { ToastContainer, toast } from "react-toastify";
 
@@ -16,6 +16,7 @@ const SignIn = () => {
   const dispatch = useDispatch();
   const signinSlice = useSelector((state) => state.signIn);
   const status = signinSlice.loading;
+  console.log(status);
   useEffect(() => {
     if (signinSlice.isSuccess && signinSlice.data.token) {
       const decode = jwtDecode(signinSlice.data.token);
@@ -29,6 +30,7 @@ const SignIn = () => {
       else if(decode.role==='Admin'){
         navigate("/admin")
       }      
+      setButtonDisable(true)
     }
     else if (signinSlice.data.error === 1) {
       toast.error("user does not exist!",{autoClose: 1000});
