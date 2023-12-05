@@ -42,7 +42,7 @@ export const signUpApi = async (payload) => {
   dispatch(startLoading());
   try {
     let response = await Instance.post(
-      `add_user?username=${payload.name}&password=${payload.password}&role=${payload.role}`
+      `add_user?username=${payload.name}&password=${payload.password}&role=${payload.role}`,{payload}
     );
     dispatch(signUp.actions.loginSuccessful(response.data));
     console.log(response.data);
