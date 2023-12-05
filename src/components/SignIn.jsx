@@ -1,29 +1,60 @@
 import { Box, Button, Stack, TextField, Typography } from "@mui/material";
 import { useFormik } from "formik";
-import React from "react";
-import { NavLink } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { NavLink, useNavigate } from "react-router-dom";
 import { signInScheema } from "../schemas";
-import "../components/stylecss/style.css"
+import "../components/stylecss/style.css";
+import {  useSelector } from "react-redux";
+import { resetReducer, signInApi } from "../redux/Slices/signinSlice";
+import CircularProgress from '@mui/material/CircularProgress';
+import { jwtDecode } from "jwt-decode";
+import { ToastContainer, toast } from "react-toastify";
+import { dispatch } from "../redux/store";
+
 const SignIn = () => {
+  const navigate=useNavigate()
+  const [buttonDisable, setButtonDisable] = useState(false)
+   const signinSlice = useSelector((state) => state.signIn);
+  const status = signinSlice.loading;
+  console.log(status);
+  useEffect(() => {
+    if (signinSlice.isSuccess && signinSlice.data.token) {
+      const decode = jwtDecode(signinSlice.data.token);
+      localStorage.setItem("token", signinSlice.data.token);
+      localStorage.setItem("role", decode.role);
+      dispatch(resetReducer());
+      console.log(decode);
+     if(decode.role==='Guest'){
+      navigate('/userPoll')
+      }
+      else if(decode.role==='Admin'){
+        navigate("/admin")
+      }      
+      setButtonDisable(true)
+    }
+    else if (signinSlice.data.error === 1) {
+      toast.error("user does not exist!",{autoClose: 1000});
+      setButtonDisable(false)
+    }
+    dispatch(resetReducer());
+  }, [signinSlice.isSuccess]);
+  
   const formik = useFormik({
     initialValues: { name: "", password: "" },
     validationSchema: signInScheema,
     onSubmit: (values) => {
-      console.log(values);
+      try {
+        if (!signinSlice.data.token) {
+          dispatch(resetReducer());
+        }
+        dispatch(signInApi(values));
+      } catch (error) {}
     },
   });
-
   return (
     <>
-      <Box
-        // sx={formBodyStyle}
-        className='formBodyStyle'
-      >
-        <Stack
-          direction={"column"}
-          spacing={2}
-          className="form_container"
-        >
+      <Box className="formBodyStyle">
+        <Stack direction={"column"} spacing={2} className="form_container">
           <Typography variant="h3">SIGN IN</Typography>
           <Stack
             sx={{ width: "100%", fontSize: "19px" }}
@@ -33,11 +64,11 @@ const SignIn = () => {
             onSubmit={formik.handleSubmit} // It is for Submittion of SignIn form
           >
             <Typography variant="h6" sx={{ textAlign: "left", mb: "10px" }}>
-              Name :
+              User Name :
             </Typography>
             <TextField
               fullWidth
-              label="Name"
+              label="User Name"
               type="name"
               name="name"
               value={formik.values.name}
@@ -70,15 +101,22 @@ const SignIn = () => {
                 </Typography>
               }
             />
-            <Button variant="contained" type="submit">
-              Sign In
-            </Button>
+            {status ? (
+              <Box sx={{ display: "flex", justifyContent: "center" }}>
+                <CircularProgress />
+              </Box>
+            ) : (
+              <Button variant="contained" type="submit" disabled={buttonDisable} >
+                Sign In
+              </Button>
+            )}
           </Stack>
           <NavLink style={{ color: "#1565c0" }} to={"/signup"} variant="body2">
             Don't have account?Register now
           </NavLink>
         </Stack>
       </Box>
+      <ToastContainer/>
     </>
   );
 };

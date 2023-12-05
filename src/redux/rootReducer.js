@@ -1,7 +1,9 @@
 import { combineReducers } from "@reduxjs/toolkit";
+import signUp from "./Slices/signupSlice";
+import signIn from "./Slices/signinSlice";
 
-import userDetailSlices from './Slices/userDetailSlices'
-const rootReducer=combineReducers({
-    userDetail:userDetailSlices,
-})
+const rootReducer = combineReducers({
+  signUp: signUp,
+  signIn: signIn,
+});
 export default rootReducer;
