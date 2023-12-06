@@ -26,7 +26,7 @@ const SignUp = () => {
   const [buttonDisable, setButtonDisable] = useState(false);
   const signupSlice = useSelector((state) => state.signUp);
   const statuS = signupSlice.loading;
-  console.log(statuS);
+  // console.log(statuS);
   useEffect(() => {
     if (signupSlice.data.error === 1) {
       toast.error("User already exists!");
