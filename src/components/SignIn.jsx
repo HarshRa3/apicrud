@@ -1,4 +1,3 @@
-// SignIn.js
 
 import {
   Box,

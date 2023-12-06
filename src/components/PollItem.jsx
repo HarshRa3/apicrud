@@ -1,9 +1,8 @@
 import { Box, Stack, Typography } from "@mui/material";
 import React from "react";
-import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import AddIcon from "@mui/icons-material/Add";
-const PollItem = ({title,InnerOption}) => {
+const PollItem = ({title,InnerOption,deleteTitle}) => {
   return (
     <>
       <Stack
@@ -21,7 +20,7 @@ const PollItem = ({title,InnerOption}) => {
           direction={"row"}
           sx={{
             justifyContent: "space-between",
-            bgcolor: "#e66767",
+            bgcolor: "#b691c0f2",
             padding: "10px",
             borderRadius: "10px",
           }}
@@ -39,7 +38,7 @@ const PollItem = ({title,InnerOption}) => {
               <EditIcon />
             </Box>
             <Box>
-              <DeleteIcon />
+              {deleteTitle}
             </Box>
           </Stack>
         </Stack>

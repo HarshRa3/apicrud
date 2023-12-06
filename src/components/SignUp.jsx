@@ -1,5 +1,3 @@
-// SignUp.js
-
 import {
   Box,
   Button,
@@ -42,7 +40,6 @@ const SignUp = () => {
       toast.success("Sign up successful");
       setButtonDisable(true);
       dispatch(resetReducer());
-      // Pass form values to SignIn page
       location("/signIn", { state: formik.values });
     }
   }, [signupSlice.isSuccess]);

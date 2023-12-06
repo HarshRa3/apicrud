@@ -18,7 +18,7 @@ const InnerPoll = ({option,votes,deleteOption}) => {
             sx={{ alignItems:'center' }}
           >
             <Box>
-              <Typography variant="h6">{votes}</Typography>
+              <Typography variant="h6">Vote: {votes}</Typography>
             </Box>
             <Box>
               {deleteOption}
