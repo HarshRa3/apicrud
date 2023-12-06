@@ -1,3 +1,5 @@
+// SignUp.js
+
 import {
   Box,
   Button,
@@ -14,29 +16,34 @@ import React, { useEffect, useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { signUpSchema } from "../schemas";
 import "../components/stylecss/style.css";
-import {  useSelector } from "react-redux";
-import { resetReducer, signUpApi, startLoading } from "../redux/Slices/signupSlice";
+import { useSelector } from "react-redux";
+import {
+  resetReducer,
+  signUpApi,
+  startLoading,
+} from "../redux/Slices/signupSlice";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import CircularProgress from '@mui/material/CircularProgress';
+import CircularProgress from "@mui/material/CircularProgress";
 import { dispatch } from "../redux/store";
 
 const SignUp = () => {
-  const navigate = useNavigate();
+  const location = useNavigate();
   const [buttonDisable, setButtonDisable] = useState(false);
   const signupSlice = useSelector((state) => state.signUp);
   const statuS = signupSlice.loading;
-  // console.log(statuS);
+
   useEffect(() => {
     if (signupSlice.data.error === 1) {
       toast.error("User already exists!");
       setButtonDisable(false);
       dispatch(resetReducer());
     } else if (signupSlice.data.error === 0) {
-      navigate("/");
       toast.success("Sign up successful");
       setButtonDisable(true);
       dispatch(resetReducer());
+      // Pass form values to SignIn page
+      location("/signIn", { state: formik.values });
     }
   }, [signupSlice.isSuccess]);
 
@@ -50,7 +57,7 @@ const SignUp = () => {
     validationSchema: signUpSchema,
     onSubmit: (values) => {
       try {
-        dispatch(startLoading()); 
+        dispatch(startLoading());
         dispatch(signUpApi(values));
       } catch (error) {
         dispatch(resetReducer());
@@ -69,7 +76,7 @@ const SignUp = () => {
             direction={"column"}
             spacing={1}
             component="form"
-            onSubmit={formik.handleSubmit} // It is for Submittion of SignIn form
+            onSubmit={formik.handleSubmit}
           >
             <Typography variant="h6" sx={{ textAlign: "left" }}>
               User Name :
@@ -164,7 +171,11 @@ const SignUp = () => {
             )}
           </Stack>
           <Box>
-            <NavLink style={{ color: "#1565c0" }} to={"/"} variant="body2">
+            <NavLink
+              style={{ color: "#1565c0" }}
+              to={"/signIn"}
+              variant="body2"
+            >
               Already have an account? Sign in
             </NavLink>
           </Box>
