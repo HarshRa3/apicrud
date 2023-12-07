@@ -16,7 +16,7 @@ import { signUpSchema } from "../schemas";
 import "../components/stylecss/style.css";
 import { useSelector } from "react-redux";
 import {
-  resetReducer,
+  signupResetReducer,
   signUpApi,
   startLoading,
 } from "../redux/Slices/signupSlice";
@@ -35,10 +35,10 @@ const SignUp = () => {
     if (signupSlice.data.error === 1) {
       toast.error("User already exists!");
       setButtonDisable(false);
-      dispatch(resetReducer());
+      dispatch(signupResetReducer());
     } else if (signupSlice.data.error === 0) {
       setButtonDisable(true);
-      dispatch(resetReducer());
+      dispatch(signupResetReducer());
       location("/signIn", { state: formik.values });
     }
   }, [signupSlice.isSuccess]);
@@ -57,7 +57,7 @@ const SignUp = () => {
         dispatch(signUpApi(values));
         
       } catch (error) {
-        dispatch(resetReducer());
+        dispatch(signupResetReducer());
       }
     },
   });

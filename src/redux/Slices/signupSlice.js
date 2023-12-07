@@ -28,7 +28,7 @@ const signUp = createSlice({
       state.isSuccess = false;
       state.errorMessage = action.payload;
     },
-    resetReducer(state) {
+    signupResetReducer(state) {
       state.isError = false;
       state.loading = false;
       state.isSuccess = false;
@@ -53,6 +53,6 @@ export const signUpApi = (payload) => async (dispatch) => {
     dispatch(signUp.actions.hasError(e));
   }
 };
-export const { startLoading, loginSuccessful, hasError, resetReducer } = signUp.actions;
+export const { startLoading, loginSuccessful, hasError, signupResetReducer } = signUp.actions;
 
 export default signUp.reducer;

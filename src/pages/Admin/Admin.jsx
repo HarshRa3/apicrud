@@ -13,7 +13,7 @@ import PollItem from "../../components/PollItem";
 import DeleteIcon from "@mui/icons-material/Delete";
 import InnerPoll from "../../components/InnerPoll";
 import { DeleteOptionApi } from "../../redux/Slices/DeleteOption";
-import { useNavigate } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { DeleteTitleApi } from "../../redux/Slices/DeleteTitle";
 import { ToastContainer } from "react-toastify";
 // import { Navigate } from "react-router-dom";
@@ -60,7 +60,10 @@ const Admin = () => {
         sx={{ alignItems: "center", width: "90%", margin: "10px auto" }}
         spacing={2}
       >
-        <Typography variant="h5">Add Poll +</Typography>
+        {" "}
+        <NavLink style={{textDecoration:'none',color:'black' }} to={"/addPoll"}>
+          <Typography variant="h5">Add Poll +</Typography>
+        </NavLink>
       </Stack>
       <Box
         sx={{
@@ -78,8 +81,9 @@ const Admin = () => {
               dataList._id === deleteTitleId && deleteTitleLoading ? (
                 <CircularProgress color="inherit" />
               ) : (
-                <DeleteIcon color="error"
-                sx={{cursor:'pointer'}}
+                <DeleteIcon
+                  color="error"
+                  sx={{ cursor: "pointer" }}
                   onClick={() => deleteTitleData(dataList._id)}
                 />
               )
@@ -119,7 +123,7 @@ const Admin = () => {
           Log Out
         </Button>
       </Box>
-      <ToastContainer/>
+      <ToastContainer />
     </Box>
   );
 };

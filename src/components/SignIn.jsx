@@ -62,6 +62,7 @@ const SignIn = () => {
     if (formik.values.name && formik.values.password) {
       ref.current.click();
     }
+    navigate('/signIn')
   }, [autoSignin]);
 
   return (
