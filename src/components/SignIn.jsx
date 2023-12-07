@@ -13,6 +13,7 @@ import { dispatch } from "../redux/store";
 
 const SignIn = () => {
   const ref = useRef(null);
+  const [autoSignin,setAutoSignin]=useState(false)
   const navigate = useNavigate();
   const location = useLocation();
   const [buttonDisable, setButtonDisable] = useState(false);
@@ -52,6 +53,7 @@ const SignIn = () => {
           dispatch(resetReducer());
         }
         dispatch(signInApi(values));
+        setAutoSignin(true)
       } catch (error) {}
     },
   });
@@ -60,7 +62,7 @@ const SignIn = () => {
     if (formik.values.name && formik.values.password) {
       ref.current.click();
     }
-  }, [formik.values]);
+  }, [autoSignin]);
 
   return (
     <>
