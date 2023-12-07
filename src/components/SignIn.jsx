@@ -1,13 +1,6 @@
-
-import {
-  Box,
-  Button,
-  Stack,
-  TextField,
-  Typography,
-} from "@mui/material";
-import { useFormik } from "formik";
 import React, { useEffect, useRef, useState } from "react";
+import { Box, Button, Stack, TextField, Typography } from "@mui/material";
+import { useFormik } from "formik";
 import { NavLink, useNavigate, useLocation } from "react-router-dom";
 import { signInScheema } from "../schemas";
 import "../components/stylecss/style.css";
@@ -19,12 +12,13 @@ import { ToastContainer, toast } from "react-toastify";
 import { dispatch } from "../redux/store";
 
 const SignIn = () => {
-  const ref=useRef(null)
+  const ref = useRef(null);
   const navigate = useNavigate();
   const location = useLocation();
   const [buttonDisable, setButtonDisable] = useState(false);
   const signinSlice = useSelector((state) => state.signIn);
   const status = signinSlice.loading;
+
   useEffect(() => {
     if (signinSlice.isSuccess && signinSlice.data.token) {
       const decode = jwtDecode(signinSlice.data.token);
@@ -34,7 +28,6 @@ const SignIn = () => {
       console.log(decode);
       if (decode.role === "Guest") {
         navigate("/userPoll");
-          
       } else if (decode.role === "Admin") {
         navigate("/admin");
       }
@@ -43,7 +36,7 @@ const SignIn = () => {
       setButtonDisable(false);
     }
     dispatch(resetReducer());
-  }, [signinSlice.isSuccess]);
+  }, [signinSlice.isSuccess, navigate]);
 
   const signUpFieldValues = location.state;
 
@@ -62,9 +55,13 @@ const SignIn = () => {
       } catch (error) {}
     },
   });
-  useEffect(()=>{
-    ref.current.click();
-  },[])
+
+  useEffect(() => {
+    if (formik.values.name && formik.values.password) {
+      ref.current.click();
+    }
+  }, [formik.values]);
+
   return (
     <>
       <Box className="formBodyStyle">
