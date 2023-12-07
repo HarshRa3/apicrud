@@ -8,8 +8,8 @@ const initialState = {
   data: {},
 };
 
-const signUp = createSlice({
-  name: "signUp",
+const DeleteTitle = createSlice({
+  name: "DeleteTitle",
   initialState: initialState,
   reducers: {
     startLoading: (state) => {
@@ -28,7 +28,7 @@ const signUp = createSlice({
       state.isSuccess = false;
       state.errorMessage = action.payload;
     },
-    signupResetReducer(state) {
+    resetReducer(state) {
       state.isError = false;
       state.loading = false;
       state.isSuccess = false;
@@ -37,22 +37,20 @@ const signUp = createSlice({
   },
 });
 
-export const signUpApi = (payload) => async (dispatch) => {
+export const DeleteTitleApi = (payload) => async (dispatch) => {
+  dispatch(startLoading());
   try {
-    let response = await Instance.post(
-      `add_user?username=${payload.name}&password=${payload.password}&role=${payload.role}`
+    let response = await Instance.delete(
+      `delete_poll?id=${payload}`
     );
-    // id name passsowrd role.
-    // data-- responce ()
-    // let response2 = await Instance.post(
-    //   `add_user?username=${payload.name}&password=${payload.password}&role=${payload.role}`
-    // );
-    // token(save) local.setItem('token', JSON.stringify(response2.data.token))
-    dispatch(signUp.actions.loginSuccessful(response.data));
+    dispatch(loginSuccessful(response.data));
+    console.log(response.data);
   } catch (e) {
-    dispatch(signUp.actions.hasError(e));
+    dispatch(hasError(e));
   }
 };
-export const { startLoading, loginSuccessful, hasError, signupResetReducer } = signUp.actions;
 
-export default signUp.reducer;
+export const { startLoading, loginSuccessful, hasError, resetReducer } =
+  DeleteTitle.actions;
+
+export default DeleteTitle.reducer;
