@@ -42,6 +42,12 @@ export const signUpApi = (payload) => async (dispatch) => {
     let response = await Instance.post(
       `add_user?username=${payload.name}&password=${payload.password}&role=${payload.role}`
     );
+    // id name passsowrd role.
+    // data-- responce ()
+    // let response2 = await Instance.post(
+    //   `add_user?username=${payload.name}&password=${payload.password}&role=${payload.role}`
+    // );
+    // token(save) local.setItem('token', JSON.stringify(response2.data.token))
     dispatch(signUp.actions.loginSuccessful(response.data));
   } catch (e) {
     dispatch(signUp.actions.hasError(e));

@@ -7,7 +7,7 @@ import {
   Typography,
 } from "@mui/material";
 import { useFormik } from "formik";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { NavLink, useNavigate, useLocation } from "react-router-dom";
 import { signInScheema } from "../schemas";
 import "../components/stylecss/style.css";
@@ -19,12 +19,12 @@ import { ToastContainer, toast } from "react-toastify";
 import { dispatch } from "../redux/store";
 
 const SignIn = () => {
+  const ref=useRef(null)
   const navigate = useNavigate();
   const location = useLocation();
   const [buttonDisable, setButtonDisable] = useState(false);
   const signinSlice = useSelector((state) => state.signIn);
   const status = signinSlice.loading;
-
   useEffect(() => {
     if (signinSlice.isSuccess && signinSlice.data.token) {
       const decode = jwtDecode(signinSlice.data.token);
@@ -34,10 +34,10 @@ const SignIn = () => {
       console.log(decode);
       if (decode.role === "Guest") {
         navigate("/userPoll");
+          
       } else if (decode.role === "Admin") {
         navigate("/admin");
       }
-      setButtonDisable(true);
     } else if (signinSlice.data.error === 1) {
       toast.error("user does not exist!", { autoClose: 1000 });
       setButtonDisable(false);
@@ -62,7 +62,9 @@ const SignIn = () => {
       } catch (error) {}
     },
   });
-
+  useEffect(()=>{
+    ref.current.click();
+  },[])
   return (
     <>
       <Box className="formBodyStyle">
@@ -118,7 +120,7 @@ const SignIn = () => {
                 <CircularProgress />
               </Box>
             ) : (
-              <Button variant="contained" type="submit" disabled={buttonDisable}>
+              <Button ref={ref} variant="contained" type="submit" disabled={buttonDisable}>
                 Sign In
               </Button>
             )}

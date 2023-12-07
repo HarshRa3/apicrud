@@ -37,7 +37,6 @@ const SignUp = () => {
       setButtonDisable(false);
       dispatch(resetReducer());
     } else if (signupSlice.data.error === 0) {
-      toast.success("Sign up successful");
       setButtonDisable(true);
       dispatch(resetReducer());
       location("/signIn", { state: formik.values });
@@ -56,6 +55,7 @@ const SignUp = () => {
       try {
         dispatch(startLoading());
         dispatch(signUpApi(values));
+        
       } catch (error) {
         dispatch(resetReducer());
       }

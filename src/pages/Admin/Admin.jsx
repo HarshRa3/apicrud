@@ -15,6 +15,7 @@ import InnerPoll from "../../components/InnerPoll";
 import { DeleteOptionApi } from "../../redux/Slices/DeleteOption";
 import { useNavigate } from "react-router-dom";
 import { DeleteTitleApi } from "../../redux/Slices/DeleteTitle";
+import { ToastContainer } from "react-toastify";
 // import { Navigate } from "react-router-dom";
 const Admin = () => {
   const navigate = useNavigate();
@@ -118,6 +119,7 @@ const Admin = () => {
           Log Out
         </Button>
       </Box>
+      <ToastContainer/>
     </Box>
   );
 };
