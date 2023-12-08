@@ -5,22 +5,22 @@ const initialState = {
   loading: false,
   isError: false,
   isSuccess: false,
-  data: {},
+  data: [],
 };
 
-const DeleteTitle = createSlice({
-  name: "DeleteTitle",
+const AddOption = createSlice({
+  name: "AddOption",
   initialState: initialState,
   reducers: {
     startLoading: (state) => {
       state.loading = true;
       state.isError = false;
     },
-    loginSuccessful: (state, action) => {
+    getSuccess: (state, action) => {
       state.loading = false;
       state.isError = false;
       state.isSuccess = true;
-      state.data = { ...action.payload };
+      state.data ={ ...action.payload };
     },
     hasError: (state, action) => {
       state.loading = false;
@@ -37,19 +37,16 @@ const DeleteTitle = createSlice({
   },
 });
 
-export const DeleteTitleApi = (payload) => async (dispatch) => {
+export const AddOptionApi =(OptionId,OptionData)=>  async (dispatch) => {
   dispatch(startLoading());
   try {
-    let response = await Instance.delete(
-      `delete_poll?id=${payload}`
-    );
-    dispatch(loginSuccessful(response.data));
+    let response = await Instance.post(`add_new_option?id=${OptionId}&option_text=${OptionData.option}`)
+    dispatch(AddOption.actions.getSuccess(response.data));
   } catch (e) {
-    dispatch(hasError(e));
+    dispatch(AddOption.actions.hasError(e));
   }
 };
-
 export const { startLoading, loginSuccessful, hasError, resetReducer } =
-  DeleteTitle.actions;
+  AddOption.actions;
 
-export default DeleteTitle.reducer;
+export default AddOption.reducer;

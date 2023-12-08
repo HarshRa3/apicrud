@@ -1,5 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import Instance from "../Axios/Instance";
+import { dispatch } from "../store";
 
 const initialState = {
   loading: false,
@@ -37,27 +38,29 @@ const AddPoll = createSlice({
   },
 });
 
-export const AddPollApi = (payload, newOption) => async (dispatch) => {
+export const AddPollApi = (payload, newOption) => async () => {
   dispatch(AddPoll.actions.startLoading());
+  console.log(payload);
   try {
-    if (newOption.length === 0) {
+    if (newOption.length === 1) {
       let response = await Instance.post(
-        `add_poll?title=${payload.Title}%20polll&options=${newOption[0].option}`
+        `add_poll?title=${payload.title}&options=${newOption[0].option}`
       );
-      dispatch(AddPoll.actions.loginSuccessful(response.data));
-    } else if (newOption.length === 1) {
-      let response = await Instance.post(
-        `add_poll?title=${payload.Title}%20polll&options=${newOption[0].option}____${newOption[1].option}`
-      );
+
       dispatch(AddPoll.actions.loginSuccessful(response.data));
     } else if (newOption.length === 2) {
       let response = await Instance.post(
-        `add_poll?title=${payload.Title}%20polll&options=${newOption[0].option}____${newOption[1].option}____${newOption[2].option}`
+        `add_poll?title=${payload.title}&options=${newOption[0].option}____${newOption[1].option}`
       );
       dispatch(AddPoll.actions.loginSuccessful(response.data));
     } else if (newOption.length === 3) {
       let response = await Instance.post(
-        `add_poll?title=${payload.Title}%20polll&options=${newOption[0].option}____${newOption[1].option}____${newOption[2].option}____${newOption[3].option}`
+        `add_poll?title=${payload.title}&options=${newOption[0].option}____${newOption[1].option}____${newOption[2].option}`
+      );
+      dispatch(AddPoll.actions.loginSuccessful(response.data));
+    } else if (newOption.length === 4) {
+      let response = await Instance.post(
+        `add_poll?title=${payload.title}&options=${newOption[0].option}____${newOption[1].option}____${newOption[2].option}____${newOption[3].option}`
       );
       dispatch(AddPoll.actions.loginSuccessful(response.data));
     }

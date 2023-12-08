@@ -1,5 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import Instance from "../Axios/Instance";
+import { dispatch } from "../store";
 
 const initialState = {
   loading: false,
@@ -8,8 +9,8 @@ const initialState = {
   data: {},
 };
 
-const DeleteTitle = createSlice({
-  name: "DeleteTitle",
+const EditTitle = createSlice({
+  name: "EditTitle",
   initialState: initialState,
   reducers: {
     startLoading: (state) => {
@@ -37,19 +38,20 @@ const DeleteTitle = createSlice({
   },
 });
 
-export const DeleteTitleApi = (payload) => async (dispatch) => {
+export const EditTitleApi = (titleId, titleData) => async () => {
   dispatch(startLoading());
   try {
-    let response = await Instance.delete(
-      `delete_poll?id=${payload}`
+    let response = await Instance.post(
+      `update_poll_title?id=${titleId}&title=${titleData}`
     );
     dispatch(loginSuccessful(response.data));
+    console.log(response.data);
   } catch (e) {
     dispatch(hasError(e));
   }
 };
 
 export const { startLoading, loginSuccessful, hasError, resetReducer } =
-  DeleteTitle.actions;
+  EditTitle.actions;
 
-export default DeleteTitle.reducer;
+export default EditTitle.reducer;

@@ -3,8 +3,15 @@ import React, { useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
+import { useFormik } from "formik";
+// import { useSelector } from "react-redux";
+import { AddPollApi, resetReducer } from "../../redux/Slices/AddPoll";
+import { Link, useNavigate } from "react-router-dom";
+import  { dispatch } from "../../redux/store";
 const AddPoll = () => {
+  const navigate = useNavigate();
   const [newOption, setNewOption] = useState([{ option: "" }]);
+  // const addpollDataLoading = useSelector((state) => state.AddPoll.loading);
   const increseLength = () => {
     if (newOption.length < 4) {
       setNewOption([...newOption, { option: "" }]);
@@ -27,42 +34,98 @@ const AddPoll = () => {
     onchangeValue[index][name] = value;
     setNewOption(onchangeValue);
   };
+  const hasDuplecates = (newOption) => {
+    let valueSet = new Set(
+      newOption.map((e) => {
+        return e.option.trim();
+      })
+    );
+    return valueSet.size !== newOption.length;
+  };
+  const formik = useFormik({
+    initialValues: {
+      title: "",
+    },
+    onSubmit: (values) => {
+      try {
+          if (values.title.trim() !== '') {
+              if (newOption[0].option.trim() !== '') {
+                  if (hasDuplecates(newOption)) {
+                      toast.error('Options cannot be the same');
+                      return;
+                  }
+
+                  dispatch(AddPollApi(values, newOption));
+                  setTimeout(() => {
+                      navigate('/admin')
+                  }, 200);
+              }
+
+              else {
+                  toast.warning('Please enter Opions')
+              }
+          }
+          else {
+              dispatch(resetReducer())
+              toast.warning('Please enter a title or Opions')
+          }
+      }
+      catch (error) {
+      }
+  },
+  });
   return (
     <Box className="formBodyStyle">
-      <Stack direction={"column"} spacing={2} className="form_container">
-        <Typography variant="h4" sx={{ textAlign: "center" }}>
-          Add Data Here
-        </Typography>
-        <TextField label={"Title"} />
-        {newOption.map((e, i) => {
-          return (
-            <TextField
-              key={i}
-              label={"Option " + (i + 1)}
-              name={`option`}
-              value={e.option}
-              onChange={(event) => handleChange(event, i)}
-            />
-          );
-        })}
-        <Stack direction={"row"} sx={{ justifyContent: "space-between" }}>
-          <Fab
+      <form onSubmit={formik.handleSubmit}>
+        <Stack direction={"column"} spacing={2} className="form_container">
+          <Typography variant="h4" sx={{ textAlign: "center" }}>
+            Add Data Here
+          </Typography>
+          <TextField
+            label={"Title"}
+            name="title"
+            value={formik.values.name}
+            onChange={formik.handleChange}
+          />
+          {newOption.map((e, i) => {
+            return (
+              <TextField
+                key={i}
+                label={"Option " + (i + 1)}
+                name={`option`}
+                value={e.option}
+                onChange={(event) => handleChange(event, i)}
+              />
+            );
+          })}
+          <Stack direction={"row"} sx={{ justifyContent: "space-between" }}>
+            <Fab
+              variant="contained"
+              onClick={() => increseLength()}
+              color="success"
+            >
+              <AddIcon />
+            </Fab>
+            <Fab
+              variant="contained"
+              onClick={() => decreseLength()}
+              color="error"
+            >
+              <RemoveIcon />
+            </Fab>
+          </Stack>
+          <Button
             variant="contained"
-            onClick={() => increseLength()}
-            color="success"
+            // onClick={formik.handleSubmit}
+            type="submit"
           >
-            <AddIcon />
-          </Fab>
-          <Fab
-            variant="contained"
-            onClick={() => decreseLength()}
-            color="error"
-          >
-            <RemoveIcon />
-          </Fab>
+            Submit
+          </Button>
+         <Link to={'/admin'} width='100%' >
+         <Button sx={{width:'100%'}} variant='contained'>Cancel</Button>
+         </Link> 
         </Stack>
-        <Button variant="contained">Submit</Button>
-      </Stack>
+      </form>
       <ToastContainer />
     </Box>
   );

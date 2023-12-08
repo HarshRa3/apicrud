@@ -19,7 +19,6 @@ const SignIn = () => {
   const [buttonDisable, setButtonDisable] = useState(false);
   const signinSlice = useSelector((state) => state.signIn);
   const status = signinSlice.loading;
-
   useEffect(() => {
     if (signinSlice.isSuccess && signinSlice.data.token) {
       const decode = jwtDecode(signinSlice.data.token);
