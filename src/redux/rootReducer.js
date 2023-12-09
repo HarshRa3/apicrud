@@ -16,5 +16,5 @@ const rootReducer = combineReducers({
   AddPoll: AddPoll,
   AddOption: AddOption,
   EditTitle:EditTitle,
-});
+  });
 export default rootReducer;

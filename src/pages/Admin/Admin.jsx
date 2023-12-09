@@ -21,12 +21,12 @@ import { ToastContainer } from "react-toastify";
 import EditIcon from "@mui/icons-material/Edit";
 
 import AddIcon from "@mui/icons-material/Add";
-import RefereshAnimation from "../../components/RefereshAnimation";
 const Admin = () => {
   const navigate = useNavigate();
   const [deleteTitleId, setDeleteId] = useState(null);
   const [optionData, setOptionData] = useState(null);
   const pollList = useSelector((state) => state.AdminPoll);
+  console.log(pollList);
   const deleteOptionLoading = useSelector(
     (state) => state.DeleteOption.loading
   );
@@ -79,7 +79,7 @@ const Admin = () => {
       }}
     >
       <Box sx={{ textAlign: "center" }}>
-        <Typography variant="h3">Admin Poll</Typography>
+        <Typography variant="h3"> Welcome to Admin Poll</Typography>
       </Box>
       <Stack
         direction={"column"}
@@ -137,7 +137,7 @@ const Admin = () => {
               <InnerPoll
                 option={option.option}
                 key={index}
-                votes={option.vote}
+                votes={'Vote: ' +option.vote}
                 deleteOption={
                   optionData === option.option && deleteOptionLoading ? (
                     <CircularProgress color="inherit" />

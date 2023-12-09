@@ -25,8 +25,8 @@ const SignIn = () => {
       localStorage.setItem("token", signinSlice.data.token);
       localStorage.setItem("role", decode.role);
       dispatch(resetReducer());
-      console.log(decode);
       if (decode.role === "Guest") {
+
         navigate("/userPoll");
       } else if (decode.role === "Admin") {
         navigate("/admin");
