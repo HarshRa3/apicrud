@@ -11,14 +11,18 @@ import { AddVoteApi } from "../../redux/Slices/AddVote";
 
 const User = () => {
   const pollList = useSelector((state) => state.AdminPoll);
-  const [disabledOptions,setDisabledOptions]=useState({})
-  const token=localStorage.getItem('token')
-  console.log(pollList);
+  const AdminPollLoading=pollList.loading
+  // console.log(AdminPollLoading);
+  const [disabledOptions, setDisabledOptions] = useState({});
+  const token = localStorage.getItem("token");
+  // console.log(pollList);
+  // useEffect(() => {
+  //   dispatch(AdminPollApi());
+  // }, []);
   useEffect(() => {
-    dispatch(AdminPollApi());
-  }, []);
-  useEffect(() => {
-    const storeDisabledOptions = JSON.parse(localStorage.getItem("disabledOptions"));
+    const storeDisabledOptions = JSON.parse(
+      localStorage.getItem("disabledOptions")
+    );
     if (storeDisabledOptions) {
       setDisabledOptions(storeDisabledOptions);
     }
@@ -32,18 +36,18 @@ const User = () => {
       access_token: token,
     },
   };
-  const navigate=useNavigate()
-  const logout=()=>{
-    localStorage.clear()
-    navigate('/')
-  }
+  const navigate = useNavigate();
+  const logout = () => {
+    localStorage.clear();
+    navigate("/");
+  };
   const VoteChange = (title, OptionId, OptionData) => {
     dispatch(AddVoteApi(OptionId, OptionData, header));
     setDisabledOptions((prevOptions) => ({
       ...prevOptions,
       [title]: true,
     }));
-    toast.success("Your Vote has been Submitted",{autoClose:1000})
+    toast.success("Your Vote has been Submitted", { autoClose: 1000 });
   };
   return (
     <Box
@@ -77,12 +81,17 @@ const User = () => {
                       key={i}
                       votes={
                         <input
-                        type="radio"
-                        name={dataList._id}
-                        style={{ cursor: "pointer" }}
-                        onChange={() =>
-                          VoteChange(dataList.title, dataList._id, option.option)}
-                        disabled={disabledOptions[dataList.title]} 
+                          type="radio"
+                          name={dataList._id}
+                          style={{ cursor: "pointer" }}
+                          onChange={() =>
+                            VoteChange(
+                              dataList.title,
+                              dataList._id,
+                              option.option
+                            )
+                          }
+                          disabled={disabledOptions[dataList.title]}
                         />
                       }
                     />
@@ -92,9 +101,11 @@ const User = () => {
             );
           })}
         </Box>
-        <Button variant="contained" onClick={()=>logout()} >Log Out</Button>
+        <Button variant="contained" onClick={() => logout()}>
+          Log Out
+        </Button>
       </Box>
-      <ToastContainer/>
+      <ToastContainer />
     </Box>
   );
 };

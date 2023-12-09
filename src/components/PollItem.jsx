@@ -24,7 +24,7 @@ const PollItem = ({title,InnerOption,deleteTitle,AddTitle,EditTitle}) => {
             borderRadius: "10px",
           }}
         >
-          <Typography variant="h5">{title}</Typography>
+          <Typography variant="h5" sx={{wordBreak:'break-word',maxWidth:'50%'}} >{title}</Typography>
           <Stack
             direction={"row"}
             spacing={4}

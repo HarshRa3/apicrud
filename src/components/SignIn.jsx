@@ -46,12 +46,12 @@ const SignIn = () => {
       password: signUpFieldValues ? signUpFieldValues.password : "",
     },
     validationSchema: signInScheema,
-    onSubmit: (values) => {
-      try {
+    onSubmit: async (values) => {
+       try {
         if (!signinSlice.data.token) {
-          dispatch(resetReducer());
+         dispatch(resetReducer());
         }
-        dispatch(signInApi(values));
+        await dispatch(signInApi(values));
         setAutoSignin(true)
       } catch (error) {}
     },
@@ -92,8 +92,10 @@ const SignIn = () => {
                   {formik.errors.name &&
                     formik.touched.name &&
                     formik.errors.name}
+    
                 </Typography>
               }
+
             />
             <Typography variant="h6" sx={{ mb: "10px", textAlign: "left" }}>
               Password :

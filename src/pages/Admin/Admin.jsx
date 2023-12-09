@@ -26,7 +26,6 @@ const Admin = () => {
   const [deleteTitleId, setDeleteId] = useState(null);
   const [optionData, setOptionData] = useState(null);
   const pollList = useSelector((state) => state.AdminPoll);
-  console.log(pollList);
   const deleteOptionLoading = useSelector(
     (state) => state.DeleteOption.loading
   );
@@ -41,7 +40,7 @@ const Admin = () => {
   };
   useEffect(() => {
     dispatch(AdminPollApi());
-  }, [deleteOptionLoading, deleteTitleLoading, EditTitleLoading]);
+  }, [deleteOptionLoading, deleteTitleLoading, EditTitleLoading,AddOptionLoading]);
 
   const deleteOptionData = (pollId, optionText) => {
     dispatch(DeleteOptionApi(pollId, optionText));
@@ -52,10 +51,7 @@ const Admin = () => {
     setDeleteId(titleID);
   };
   if (
-    AddPollLoading ||
-    EditTitleLoading ||
-    AddOptionLoading ||
-    AdminPollLoading
+    deleteOptionLoading || deleteTitleLoading || EditTitleLoading || AddOptionLoading || AdminPollLoading
   ) {
     return (
       <Backdrop
@@ -103,7 +99,9 @@ const Admin = () => {
         }}
       >
         {pollList.data.map((dataList) => (
-          <PollItem
+          dataList.options.length >0 &&
+  
+         <PollItem
             title={dataList.title}
             key={dataList._id}
             EditTitle={
@@ -137,7 +135,7 @@ const Admin = () => {
               <InnerPoll
                 option={option.option}
                 key={index}
-                votes={'Vote: ' +option.vote}
+                votes={option.vote}
                 deleteOption={
                   optionData === option.option && deleteOptionLoading ? (
                     <CircularProgress color="inherit" />
