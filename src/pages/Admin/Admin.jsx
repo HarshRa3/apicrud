@@ -121,15 +121,13 @@ const Admin = () => {
               )
             }
             deleteTitle={
-              dataList._id === deleteTitleId && deleteTitleLoading ? (
-                <CircularProgress color="inherit" />
-              ) : (
+           
                 <DeleteIcon
                   color="error"
                   sx={{ cursor: "pointer" }}
                   onClick={() => deleteTitleData(dataList._id)}
                 />
-              )
+              
             }
             InnerOption={dataList.options.map((option, index) => (
               <InnerPoll
@@ -137,9 +135,7 @@ const Admin = () => {
                 key={index}
                 votes={option.vote}
                 deleteOption={
-                  optionData === option.option && deleteOptionLoading ? (
-                    <CircularProgress color="inherit" />
-                  ) : (
+                 
                     <DeleteIcon
                       color="error"
                       sx={{ cursor: "pointer" }}
@@ -147,7 +143,6 @@ const Admin = () => {
                         deleteOptionData(dataList._id, option.option)
                       }
                     />
-                  )
                 }
               />
             ))}
