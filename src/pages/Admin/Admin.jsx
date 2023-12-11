@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState} from "react";
 import { dispatch } from "../../redux/store";
 import { AdminPollApi } from "../../redux/Slices/AdminPoll";
 import { useSelector } from "react-redux";
@@ -17,7 +17,6 @@ import { DeleteOptionApi } from "../../redux/Slices/DeleteOption";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import { DeleteTitleApi } from "../../redux/Slices/DeleteTitle";
 import { ToastContainer } from "react-toastify";
-// import { Navigate } from "react-router-dom";
 import EditIcon from "@mui/icons-material/Edit";
 
 import AddIcon from "@mui/icons-material/Add";
@@ -33,14 +32,14 @@ const Admin = () => {
   const EditTitleLoading = useSelector((state) => state.EditTitle.loading);
   const AddPollLoading = useSelector((state) => state.AddPoll.loading);
   const AddOptionLoading = useSelector((state) => state.AddOption.loading);
-  const AdminPollLoading = useSelector((state) => state.AdminPoll.loading);
+  const [loading,setLoading]=useState(true)
   const logout = () => {
     localStorage.clear();
     navigate("/");
   };
   useEffect(() => {
-    dispatch(AdminPollApi());
-  }, [deleteOptionLoading, deleteTitleLoading, EditTitleLoading,AddOptionLoading]);
+    dispatch(AdminPollApi()).then(()=>setLoading(false));
+  }, [deleteOptionLoading, deleteTitleLoading, EditTitleLoading,AddOptionLoading,AddPollLoading]);
 
   const deleteOptionData = (pollId, optionText) => {
     dispatch(DeleteOptionApi(pollId, optionText));
@@ -51,7 +50,7 @@ const Admin = () => {
     setDeleteId(titleID);
   };
   if (
-    deleteOptionLoading || deleteTitleLoading || EditTitleLoading || AddOptionLoading || AdminPollLoading
+    loading
   ) {
     return (
       <Backdrop
@@ -122,7 +121,10 @@ const Admin = () => {
             }
             deleteTitle={
            
-                <DeleteIcon
+              dataList._id === deleteTitleId
+              && deleteTitleLoading ?
+              <CircularProgress color="inherit" />
+              : <DeleteIcon
                   color="error"
                   sx={{ cursor: "pointer" }}
                   onClick={() => deleteTitleData(dataList._id)}
@@ -136,7 +138,10 @@ const Admin = () => {
                 votes={option.vote}
                 deleteOption={
                  
-                    <DeleteIcon
+                  optionData === option.option &&
+                  deleteOptionLoading ?
+                  <CircularProgress color="inherit" />
+                  : <DeleteIcon
                       color="error"
                       sx={{ cursor: "pointer" }}
                       onClick={() =>
