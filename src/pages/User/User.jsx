@@ -7,6 +7,7 @@ import InnerPoll from "../../components/InnerPoll";
 import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import { AddVoteApi } from "../../redux/Slices/AddVote";
+import RefereshAnimation from "../../components/RefereshAnimation";
 
 const User = () => {
   const dispatch = useDispatch();
@@ -56,15 +57,7 @@ const User = () => {
     loading
   ) {
     return (
-      <Backdrop
-      sx={{
-        color: "#fff",
-        zIndex: (theme) => theme.zIndex.drawer + 1,
-      }}
-      open={true}
-    >
-      <CircularProgress color="inherit" />
-    </Backdrop>
+      <RefereshAnimation/>
     );
   }
   return (
