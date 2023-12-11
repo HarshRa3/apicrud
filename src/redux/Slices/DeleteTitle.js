@@ -44,7 +44,6 @@ export const DeleteTitleApi = (payload) => async (dispatch) => {
       `delete_poll?id=${payload}`
     );
     dispatch(loginSuccessful(response.data));
-    console.log(response.data);
   } catch (e) {
     dispatch(hasError(e));
   }

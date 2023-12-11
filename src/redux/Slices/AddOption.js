@@ -1,6 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
 import Instance from "../Axios/Instance";
-import { dispatch } from "../store";
 
 const initialState = {
   loading: false,
@@ -9,8 +8,8 @@ const initialState = {
   data: [],
 };
 
-const AdminPoll = createSlice({
-  name: "AdminPoll",
+const AddOption = createSlice({
+  name: "AddOption",
   initialState: initialState,
   reducers: {
     startLoading: (state) => {
@@ -21,7 +20,7 @@ const AdminPoll = createSlice({
       state.loading = false;
       state.isError = false;
       state.isSuccess = true;
-      state.data =action.payload.data.reverse();
+      state.data ={ ...action.payload };
     },
     hasError: (state, action) => {
       state.loading = false;
@@ -38,18 +37,16 @@ const AdminPoll = createSlice({
   },
 });
 
-export const AdminPollApi =()=>  async () => {
+export const AddOptionApi =(OptionId,OptionData)=>  async (dispatch) => {
   dispatch(startLoading());
   try {
-    let response = await Instance.post(
-      `list_polls`
-    );
-    dispatch(AdminPoll.actions.getSuccess(response.data));
+    let response = await Instance.post(`add_new_option?id=${OptionId}&option_text=${OptionData.option}`)
+    dispatch(AddOption.actions.getSuccess(response.data));
   } catch (e) {
-    dispatch(AdminPoll.actions.hasError(e));
+    dispatch(AddOption.actions.hasError(e));
   }
 };
 export const { startLoading, loginSuccessful, hasError, resetReducer } =
-  AdminPoll.actions;
+  AddOption.actions;
 
-export default AdminPoll.reducer;
+export default AddOption.reducer;

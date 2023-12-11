@@ -1,8 +1,7 @@
 import { Box, Stack, Typography } from "@mui/material";
 import React from "react";
 import EditIcon from "@mui/icons-material/Edit";
-import AddIcon from "@mui/icons-material/Add";
-const PollItem = ({title,InnerOption,deleteTitle}) => {
+const PollItem = ({title,InnerOption,deleteTitle,AddTitle,EditTitle}) => {
   return (
     <>
       <Stack
@@ -25,17 +24,17 @@ const PollItem = ({title,InnerOption,deleteTitle}) => {
             borderRadius: "10px",
           }}
         >
-          <Typography variant="h5">{title}</Typography>
+          <Typography variant="h5" sx={{wordBreak:'break-word',maxWidth:'50%'}} >{title}</Typography>
           <Stack
             direction={"row"}
             spacing={4}
             sx={{ justifyContent: "center" }}
           >
             <Box>
-              <AddIcon/>
+              {AddTitle}
             </Box>
             <Box>
-              <EditIcon />
+              {EditTitle}
             </Box>
             <Box>
               {deleteTitle}

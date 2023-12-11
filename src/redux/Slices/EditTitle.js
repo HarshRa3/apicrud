@@ -6,22 +6,22 @@ const initialState = {
   loading: false,
   isError: false,
   isSuccess: false,
-  data: [],
+  data: {},
 };
 
-const AdminPoll = createSlice({
-  name: "AdminPoll",
+const EditTitle = createSlice({
+  name: "EditTitle",
   initialState: initialState,
   reducers: {
     startLoading: (state) => {
       state.loading = true;
       state.isError = false;
     },
-    getSuccess: (state, action) => {
+    loginSuccessful: (state, action) => {
       state.loading = false;
       state.isError = false;
       state.isSuccess = true;
-      state.data =action.payload.data.reverse();
+      state.data = { ...action.payload };
     },
     hasError: (state, action) => {
       state.loading = false;
@@ -38,18 +38,20 @@ const AdminPoll = createSlice({
   },
 });
 
-export const AdminPollApi =()=>  async () => {
+export const EditTitleApi = (titleId, titleData) => async () => {
   dispatch(startLoading());
   try {
     let response = await Instance.post(
-      `list_polls`
+      `update_poll_title?id=${titleId}&title=${titleData}`
     );
-    dispatch(AdminPoll.actions.getSuccess(response.data));
+    dispatch(loginSuccessful(response.data));
+    console.log(response.data);
   } catch (e) {
-    dispatch(AdminPoll.actions.hasError(e));
+    dispatch(hasError(e));
   }
 };
-export const { startLoading, loginSuccessful, hasError, resetReducer } =
-  AdminPoll.actions;
 
-export default AdminPoll.reducer;
+export const { startLoading, loginSuccessful, hasError, resetReducer } =
+  EditTitle.actions;
+
+export default EditTitle.reducer;

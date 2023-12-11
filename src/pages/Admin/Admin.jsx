@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState} from "react";
 import { dispatch } from "../../redux/store";
 import { AdminPollApi } from "../../redux/Slices/AdminPoll";
 import { useSelector } from "react-redux";
 import {
+  Backdrop,
   Box,
   Button,
   CircularProgress,
@@ -13,10 +14,12 @@ import PollItem from "../../components/PollItem";
 import DeleteIcon from "@mui/icons-material/Delete";
 import InnerPoll from "../../components/InnerPoll";
 import { DeleteOptionApi } from "../../redux/Slices/DeleteOption";
-import { NavLink, useNavigate } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 import { DeleteTitleApi } from "../../redux/Slices/DeleteTitle";
 import { ToastContainer } from "react-toastify";
-// import { Navigate } from "react-router-dom";
+import EditIcon from "@mui/icons-material/Edit";
+
+import AddIcon from "@mui/icons-material/Add";
 const Admin = () => {
   const navigate = useNavigate();
   const [deleteTitleId, setDeleteId] = useState(null);
@@ -26,14 +29,17 @@ const Admin = () => {
     (state) => state.DeleteOption.loading
   );
   const deleteTitleLoading = useSelector((state) => state.DeleteTitle.loading);
-  console.log(deleteTitleLoading);
+  const EditTitleLoading = useSelector((state) => state.EditTitle.loading);
+  const AddPollLoading = useSelector((state) => state.AddPoll.loading);
+  const AddOptionLoading = useSelector((state) => state.AddOption.loading);
+  const [loading,setLoading]=useState(true)
   const logout = () => {
     localStorage.clear();
     navigate("/");
   };
   useEffect(() => {
-    dispatch(AdminPollApi());
-  }, [deleteOptionLoading, deleteTitleLoading]);
+    dispatch(AdminPollApi()).then(()=>setLoading(false));
+  }, [deleteOptionLoading, deleteTitleLoading, EditTitleLoading,AddOptionLoading,AddPollLoading]);
 
   const deleteOptionData = (pollId, optionText) => {
     dispatch(DeleteOptionApi(pollId, optionText));
@@ -43,6 +49,21 @@ const Admin = () => {
     dispatch(DeleteTitleApi(titleID));
     setDeleteId(titleID);
   };
+  if (
+    loading
+  ) {
+    return (
+      <Backdrop
+      sx={{
+        color: "#fff",
+        zIndex: (theme) => theme.zIndex.drawer + 1,
+      }}
+      open={true}
+    >
+      <CircularProgress color="inherit" />
+    </Backdrop>
+    );
+  }
   return (
     <Box
       sx={{
@@ -53,7 +74,7 @@ const Admin = () => {
       }}
     >
       <Box sx={{ textAlign: "center" }}>
-        <Typography variant="h3">Admin Poll</Typography>
+        <Typography variant="h3"> Welcome to Admin Poll</Typography>
       </Box>
       <Stack
         direction={"column"}
@@ -61,7 +82,10 @@ const Admin = () => {
         spacing={2}
       >
         {" "}
-        <NavLink style={{textDecoration:'none',color:'black' }} to={"/addPoll"}>
+        <NavLink
+          style={{ textDecoration: "none", color: "black" }}
+          to={"/addPoll"}
+        >
           <Typography variant="h5">Add Poll +</Typography>
         </NavLink>
       </Stack>
@@ -74,19 +98,38 @@ const Admin = () => {
         }}
       >
         {pollList.data.map((dataList) => (
-          <PollItem
+          dataList.options.length >0 &&
+  
+         <PollItem
             title={dataList.title}
             key={dataList._id}
+            EditTitle={
+              <Link to={`EditTitle/${dataList._id}`} state={dataList.title}>
+                <EditIcon />
+              </Link>
+            }
+            AddTitle={
+              dataList.options.length < 4 && (
+                <Link
+                  to={`AddOption/${dataList._id}`}
+                  style={{ color: "black" }}
+                  state={dataList.title}
+                >
+                  <AddIcon />
+                </Link>
+              )
+            }
             deleteTitle={
-              dataList._id === deleteTitleId && deleteTitleLoading ? (
-                <CircularProgress color="inherit" />
-              ) : (
-                <DeleteIcon
+           
+              dataList._id === deleteTitleId
+              && deleteTitleLoading ?
+              <CircularProgress color="inherit" />
+              : <DeleteIcon
                   color="error"
                   sx={{ cursor: "pointer" }}
                   onClick={() => deleteTitleData(dataList._id)}
                 />
-              )
+              
             }
             InnerOption={dataList.options.map((option, index) => (
               <InnerPoll
@@ -94,17 +137,17 @@ const Admin = () => {
                 key={index}
                 votes={option.vote}
                 deleteOption={
-                  optionData === option.option && deleteOptionLoading ? (
-                    <CircularProgress color="inherit" />
-                  ) : (
-                    <DeleteIcon
+                 
+                  optionData === option.option &&
+                  deleteOptionLoading ?
+                  <CircularProgress color="inherit" />
+                  : <DeleteIcon
                       color="error"
                       sx={{ cursor: "pointer" }}
                       onClick={() =>
                         deleteOptionData(dataList._id, option.option)
                       }
                     />
-                  )
                 }
               />
             ))}

@@ -9,8 +9,8 @@ const initialState = {
   data: [],
 };
 
-const AdminPoll = createSlice({
-  name: "AdminPoll",
+const AddVote = createSlice({
+  name: "AddVote",
   initialState: initialState,
   reducers: {
     startLoading: (state) => {
@@ -38,18 +38,18 @@ const AdminPoll = createSlice({
   },
 });
 
-export const AdminPollApi =()=>  async () => {
+export const AddVoteApi =(VoteId,VoteOptionText,header)=>  async () => {
   dispatch(startLoading());
   try {
-    let response = await Instance.post(
-      `list_polls`
+    let response = await Instance.get(
+        `do_vote?id=${VoteId}&option_text=${VoteOptionText}`, header
     );
-    dispatch(AdminPoll.actions.getSuccess(response.data));
+    dispatch(AddVote.actions.getSuccess(response.data));
   } catch (e) {
-    dispatch(AdminPoll.actions.hasError(e));
+    dispatch(AddVote.actions.hasError(e));
   }
 };
 export const { startLoading, loginSuccessful, hasError, resetReducer } =
-  AdminPoll.actions;
+  AddVote.actions;
 
-export default AdminPoll.reducer;
+export default AddVote.reducer;

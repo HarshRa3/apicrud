@@ -19,15 +19,14 @@ const SignIn = () => {
   const [buttonDisable, setButtonDisable] = useState(false);
   const signinSlice = useSelector((state) => state.signIn);
   const status = signinSlice.loading;
-
   useEffect(() => {
     if (signinSlice.isSuccess && signinSlice.data.token) {
       const decode = jwtDecode(signinSlice.data.token);
       localStorage.setItem("token", signinSlice.data.token);
       localStorage.setItem("role", decode.role);
       dispatch(resetReducer());
-      console.log(decode);
       if (decode.role === "Guest") {
+
         navigate("/userPoll");
       } else if (decode.role === "Admin") {
         navigate("/admin");
@@ -47,12 +46,12 @@ const SignIn = () => {
       password: signUpFieldValues ? signUpFieldValues.password : "",
     },
     validationSchema: signInScheema,
-    onSubmit: (values) => {
-      try {
+    onSubmit: async (values) => {
+       try {
         if (!signinSlice.data.token) {
-          dispatch(resetReducer());
+         dispatch(resetReducer());
         }
-        dispatch(signInApi(values));
+        await dispatch(signInApi(values));
         setAutoSignin(true)
       } catch (error) {}
     },
@@ -93,8 +92,10 @@ const SignIn = () => {
                   {formik.errors.name &&
                     formik.touched.name &&
                     formik.errors.name}
+    
                 </Typography>
               }
+
             />
             <Typography variant="h6" sx={{ mb: "10px", textAlign: "left" }}>
               Password :
