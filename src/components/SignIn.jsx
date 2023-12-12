@@ -62,6 +62,7 @@ const SignIn = () => {
       ref.current.click();
     }
     navigate('/')
+    localStorage.clear()
   }, [autoSignin]);
 
   return (

@@ -1,12 +1,27 @@
-// import React from 'react'
+import React, { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
-// const Protected = (props) => {
-//     const {Component}=props
-//   return (
-//     <div>
-//       <Component/>
-//     </div>
-//   )
-// }
+const Protected = (props) => {
+  const navigate = useNavigate();
+  const { Component } = props;
+  const token = localStorage.getItem('token');
+  const role = localStorage.getItem('role');
+  const isAuthenticated = role && token;
 
-// export default Protected
+  useEffect(() => {
+    const checkAuthentication = () => {
+      if (!isAuthenticated) {
+        navigate("/");
+      }
+    };
+    checkAuthentication();
+  }, [isAuthenticated, navigate]);
+
+  return (
+    <div>
+      <Component />
+    </div>
+  );
+};
+
+export default Protected;

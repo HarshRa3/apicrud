@@ -8,21 +8,19 @@ import SignIn from '../components/SignIn'
 import AddPoll from '../pages/AddPoll/AddPoll'
 import AddOption from '../pages/AddOption/AddOption'
 import EditTitle from '../pages/EditTitle/EditTitle'
-import { useSelector } from 'react-redux'
-// import EditTitle from '../redux/Slices/EditTitle'
+import Protected from './Protected'
 const Router = () => {
-  const isLogin=useSelector(state=>state.signIn.isSuccess)
-  console.log(isLogin);
+
   return (
     <Routes>
-       <Route path="/" element={<HomePage />} />
+       <Route path="/" element={<Protected Component={HomePage} />} />
         <Route path="/signup" element={<SignUp/>} />
-        <Route path='/admin' element={isLogin?<Admin/>:<Admin/>}/>
-        <Route path='/userPoll' element={<User/>}/>
-        <Route path="/signIn" element={<SignIn/>}/>
-        <Route path='/addPoll' element={<AddPoll/>}/>
-        <Route path='admin/EditTitle/:editDataId' element={<EditTitle />}> </Route>
-        <Route path='admin/AddOption/:optionDataId' element={<AddOption />}> </Route>
+        <Route path='/admin' element={<Protected Component={Admin} />}/>
+        <Route path='/userPoll' element={<Protected Component={User} />}/>
+        <Route path="/signIn" element={<Protected Component={SignIn} />}/>
+        <Route path='/addPoll' element={<Protected Component={AddPoll} />}/>
+        <Route path='admin/EditTitle/:editDataId' element={<Protected Component={EditTitle} />}> </Route>
+        <Route path='admin/AddOption/:optionDataId' element={<Protected Component={AddOption} />}> </Route>
     </Routes>
   )
 }
