@@ -5,11 +5,11 @@ import { useFormik } from 'formik';
 import { Link, useLocation, useNavigate, useParams } from 'react-router-dom';
 import { dispatch } from '../../redux/store';
 
+
 const EditTitle = () => {
     const location = useLocation();
     const navigate = useNavigate();
     const { editDataId } = useParams();
-
     const formik = useFormik({
         initialValues: {
             title: location.state
@@ -36,7 +36,7 @@ const EditTitle = () => {
                         onChange={handleTitleChange}
                         onBlur={formik.handleBlur}
                     />
-                    <Button variant="contained" type="submit">
+                    <Button variant="contained" type="submit" disabled={!formik.dirty}>
                         Submit
                     </Button>
                     <Link to={"/admin"} width="100%">

@@ -4,14 +4,12 @@ import { ToastContainer, toast } from "react-toastify";
 import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
 import { useFormik } from "formik";
-// import { useSelector } from "react-redux";
 import { AddPollApi, resetReducer } from "../../redux/Slices/AddPoll";
 import { Link, useNavigate } from "react-router-dom";
-import  { dispatch } from "../../redux/store";
+import { dispatch } from "../../redux/store";
 const AddPoll = () => {
   const navigate = useNavigate();
   const [newOption, setNewOption] = useState([{ option: "" }]);
-  // const addpollDataLoading = useSelector((state) => state.AddPoll.loading);
   const increseLength = () => {
     if (newOption.length < 4) {
       setNewOption([...newOption, { option: "" }]);
@@ -48,31 +46,29 @@ const AddPoll = () => {
     },
     onSubmit: (values) => {
       try {
-          if (values.title.trim() !== '') {
-              if (newOption[0].option.trim() !== '') {
-                  if (hasDuplecates(newOption)) {
-                      toast.error('Options cannot be the same');
-                      return;
-                  }
+        if (values.title.trim() !== "") {
+          const nonEmptyOptions = newOption.every(
+            (option) => option.option.trim() !== ""
+          );
 
-                  dispatch(AddPollApi(values, newOption));
-                  setTimeout(() => {
-                      navigate('/admin')
-                  }, 200);
-              }
-
-              else {
-                  toast.warning('Please enter Opions')
-              }
+          if (nonEmptyOptions) {
+            if (hasDuplecates(newOption)) {
+              toast.error("Options cannot be the same");
+            } else {
+              dispatch(AddPollApi(values, newOption));
+              setTimeout(() => {
+                navigate("/admin");
+              }, 200);
+            }
+          } else {
+            toast.warning("Please enter Options");
           }
-          else {
-              dispatch(resetReducer())
-              toast.warning('Please enter a title or Opions')
-          }
-      }
-      catch (error) {
-      }
-  },
+        } else {
+          dispatch(resetReducer());
+          toast.warning("Please enter a title or Opions");
+        }
+      } catch (error) {}
+    },
   });
   return (
     <Box className="formBodyStyle">
@@ -121,9 +117,11 @@ const AddPoll = () => {
           >
             Submit
           </Button>
-         <Link to={'/admin'} width='100%' >
-         <Button sx={{width:'100%'}} variant='contained'>Cancel</Button>
-         </Link> 
+          <Link to={"/admin"} width="100%">
+            <Button sx={{ width: "100%" }} variant="contained">
+              Cancel
+            </Button>
+          </Link>
         </Stack>
       </form>
       <ToastContainer />
