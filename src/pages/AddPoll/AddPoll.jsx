@@ -114,6 +114,7 @@ const AddPoll = () => {
             variant="contained"
             // onClick={formik.handleSubmit}
             type="submit"
+            disabled={!formik.dirty}
           >
             Submit
           </Button>

@@ -92,6 +92,11 @@ const User = () => {
   if (loading) {
     return <RefereshAnimation />;
   }
+  const pagee = () => {
+    return page >= Math.ceil(pollList.data.length / rowPerPage)
+      ? Math.max(0, Math.ceil(pollList.data.length / rowPerPage) - 1)
+      : page;
+  };
   return (
     <Box
       sx={{
@@ -148,11 +153,7 @@ const User = () => {
           component="div"
           rowsPerPageOptions={rowsPerPageOptions}
           count={pollList.data.length}
-          page={
-            page >= Math.ceil(pollList.data.length / rowPerPage)
-              ? Math.max(0, Math.ceil(pollList.data.length / rowPerPage) - 1)
-              : page
-          }
+          page={pagee()}
           rowsPerPage={rowPerPage}
           onPageChange={handlePageChange}
           onRowsPerPageChange={handleRowPerPageChange}

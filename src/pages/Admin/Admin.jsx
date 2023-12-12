@@ -26,7 +26,9 @@ const Admin = () => {
   const [optionData, setOptionData] = useState(null);
   const pollList = useSelector((state) => state.AdminPoll);
   // console.log(pollList.data);
-  const deleteOptionLoading = useSelector((state) => state.DeleteOption.loading);
+  const deleteOptionLoading = useSelector(
+    (state) => state.DeleteOption.loading
+  );
   const deleteTitleLoading = useSelector((state) => state.DeleteTitle.loading);
   const EditTitleLoading = useSelector((state) => state.EditTitle.loading);
   const AddPollLoading = useSelector((state) => state.AddPoll.loading);
@@ -52,17 +54,16 @@ const Admin = () => {
     navigate("/");
   };
 
-  const deleteOptionData = (pollId, option,options) => {
+  const deleteOptionData = (pollId, option, options) => {
     console.log(options.length);
-    if (options.length<=1) {
+    if (options.length <= 1) {
       dispatch(DeleteTitleApi(pollId));
       setDeleteId(pollId);
-
     } else {
       dispatch(DeleteOptionApi(pollId, option.option));
       setOptionData(option);
     }
-    }
+  };
 
   const deleteTitleData = (titleID) => {
     dispatch(DeleteTitleApi(titleID));
@@ -71,7 +72,13 @@ const Admin = () => {
 
   useEffect(() => {
     dispatch(AdminPollApi()).then(() => setLoading(false));
-  }, [deleteOptionLoading, deleteTitleLoading, EditTitleLoading, AddOptionLoading, AddPollLoading]);
+  }, [
+    deleteOptionLoading,
+    deleteTitleLoading,
+    EditTitleLoading,
+    AddOptionLoading,
+    AddPollLoading,
+  ]);
 
   useEffect(() => {
     const savedPage = localStorage.getItem("page");
@@ -99,6 +106,11 @@ const Admin = () => {
     page * rowPerPage,
     page * rowPerPage + rowPerPage
   );
+  const pagee = () => {
+    return page >= Math.ceil(pollList.data.length / rowPerPage)
+      ? Math.max(0, Math.ceil(pollList.data.length / rowPerPage) - 1)
+      : page;
+  };
 
   return (
     <Box
@@ -176,7 +188,8 @@ const Admin = () => {
                         onClick={() =>
                           deleteOptionData(
                             dataList._id,
-                            option,dataList.options
+                            option,
+                            dataList.options
                           )
                         }
                       />
@@ -191,11 +204,7 @@ const Admin = () => {
         component="div"
         rowsPerPageOptions={rowsPerPageOptions}
         count={pollList.data.length}
-        page={
-          page >= Math.ceil(pollList.data.length / rowPerPage)
-            ? Math.max(0, Math.ceil(pollList.data.length / rowPerPage) - 1)
-            : page
-        }
+        page={pagee()}
         rowsPerPage={rowPerPage}
         onPageChange={handlePageChange}
         onRowsPerPageChange={handleRowPerPageChange}
