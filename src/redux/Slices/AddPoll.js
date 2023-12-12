@@ -40,7 +40,6 @@ const AddPoll = createSlice({
 
 export const AddPollApi = (payload, newOption) => async () => {
   dispatch(AddPoll.actions.startLoading());
-  console.log(payload);
   try {
     if (newOption.length === 1) {
       let response = await Instance.post(

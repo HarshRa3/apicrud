@@ -25,6 +25,7 @@ const Admin = () => {
   const [deleteTitleId, setDeleteId] = useState(null);
   const [optionData, setOptionData] = useState(null);
   const pollList = useSelector((state) => state.AdminPoll);
+  // console.log(pollList.data);
   const deleteOptionLoading = useSelector((state) => state.DeleteOption.loading);
   const deleteTitleLoading = useSelector((state) => state.DeleteTitle.loading);
   const EditTitleLoading = useSelector((state) => state.EditTitle.loading);
@@ -51,10 +52,17 @@ const Admin = () => {
     navigate("/");
   };
 
-  const deleteOptionData = (pollId, optionText) => {
-    dispatch(DeleteOptionApi(pollId, optionText));
-    setOptionData(optionText);
-  };
+  const deleteOptionData = (pollId, option,options) => {
+    console.log(options.length);
+    if (options.length<=1) {
+      dispatch(DeleteTitleApi(pollId));
+      setDeleteId(pollId);
+
+    } else {
+      dispatch(DeleteOptionApi(pollId, option.option));
+      setOptionData(option);
+    }
+    }
 
   const deleteTitleData = (titleID) => {
     dispatch(DeleteTitleApi(titleID));
@@ -87,7 +95,10 @@ const Admin = () => {
     return <RefereshAnimation />;
   }
 
-  const paginatedPollList = pollList.data.slice(page * rowPerPage, (page + 1) * rowPerPage);
+  const paginatedPollList = pollList.data.slice(
+    page * rowPerPage,
+    page * rowPerPage + rowPerPage
+  );
 
   return (
     <Box
@@ -105,7 +116,9 @@ const Admin = () => {
         style={{ textDecoration: "none", color: "black" }}
         to={"/addPoll"}
       >
-        <Typography variant="h5" textAlign={'center'} >Add Poll +</Typography>
+        <Typography variant="h5" textAlign={"center"}>
+          Add Poll +
+        </Typography>
       </NavLink>
 
       <Box
@@ -116,8 +129,8 @@ const Admin = () => {
             "rgba(0, 0, 0, 0.16) 0px 10px 36px 0px, rgba(0, 0, 0, 0.06) 0px 0px 0px 1px",
         }}
       >
-        {paginatedPollList.map((dataList) => (
-          dataList.options.length > 0 && (
+        {pollList.data.length > 0 &&
+          paginatedPollList.map((dataList) => (
             <PollItem
               title={dataList.title}
               key={dataList._id}
@@ -154,32 +167,39 @@ const Admin = () => {
                   key={index}
                   votes={option.vote}
                   deleteOption={
-                    optionData === option.option && deleteOptionLoading ? (
+                    optionData === option && deleteOptionLoading ? (
                       <CircularProgress color="inherit" />
                     ) : (
                       <DeleteIcon
                         color="error"
                         sx={{ cursor: "pointer" }}
-                        onClick={() => deleteOptionData(dataList._id, option.option)}
+                        onClick={() =>
+                          deleteOptionData(
+                            dataList._id,
+                            option,dataList.options
+                          )
+                        }
                       />
                     )
                   }
                 />
               ))}
             />
-          )
-        ))}
+          ))}
       </Box>
-
       <TablePagination
         component="div"
         rowsPerPageOptions={rowsPerPageOptions}
         count={pollList.data.length}
-        page={page}
+        page={
+          page >= Math.ceil(pollList.data.length / rowPerPage)
+            ? Math.max(0, Math.ceil(pollList.data.length / rowPerPage) - 1)
+            : page
+        }
         rowsPerPage={rowPerPage}
         onPageChange={handlePageChange}
         onRowsPerPageChange={handleRowPerPageChange}
-        sx={{ display: 'flex', justifyContent: 'center', mt: '10px' }}
+        sx={{ display: "flex", justifyContent: "center", mt: "10px" }}
       />
 
       <Box
