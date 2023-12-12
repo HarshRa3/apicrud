@@ -14,8 +14,11 @@ const AddOption = () => {
       option: "",
     },
     onSubmit: (values) => {
-      dispatch(AddOptionApi(optionId.optionDataId,values ));
-      navigate('/admin')
+      if(values.option.trim() !== ''){
+        dispatch(AddOptionApi(optionId.optionDataId,values ));
+        navigate('/admin')     
+      }
+      else{}
     },
   });
 
@@ -33,7 +36,7 @@ const AddOption = () => {
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
           />
-          <Button variant="contained" type="submit">
+          <Button variant="contained" type="submit" disabled={!formik.dirty} >
             Submit
           </Button>
           <Link to={"/admin"} width="100%">

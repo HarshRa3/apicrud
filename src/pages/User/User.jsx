@@ -1,4 +1,4 @@
-import { Backdrop, Box, Button, CircularProgress, Typography } from "@mui/material";
+import { Box, Button, TablePagination, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { AdminPollApi } from "../../redux/Slices/AdminPoll";
@@ -7,6 +7,7 @@ import InnerPoll from "../../components/InnerPoll";
 import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import { AddVoteApi } from "../../redux/Slices/AddVote";
+import RefereshAnimation from "../../components/RefereshAnimation";
 
 const User = () => {
   const dispatch = useDispatch();
@@ -14,10 +15,46 @@ const User = () => {
   const token = localStorage.getItem("token");
   const [disabledOptions, setDisabledOptions] = useState({});
   const navigate = useNavigate();
-  const [loading,setLoading]=useState(true)
+  const [loading, setLoading] = useState(true);
+  const [page, setPage] = useState(0);
+  const [rowPerPage, setRowPerPage] = useState(5);
+  const rowsPerPageOptions = [5, 10, 15];
+
+  const handlePageChange = (event, newPage) => {
+    setPage(newPage);
+  };
+
+  const handleRowPerPageChange = (event) => {
+    const newRowsPerPage = parseInt(event.target.value, 10);
+    setRowPerPage(newRowsPerPage);
+    setPage(0);
+    localStorage.setItem("rowpage", newRowsPerPage);
+  };
+  useEffect(() => {
+    const savedPage = localStorage.getItem("page");
+    const savedRowPerPage = localStorage.getItem("rowpage");
+
+    if (savedPage !== null) {
+      setPage(parseInt(savedPage, 10));
+    }
+
+    if (savedRowPerPage !== null) {
+      setRowPerPage(parseInt(savedRowPerPage, 10));
+    }
+  }, []);
 
   useEffect(() => {
-    dispatch(AdminPollApi()).then(()=>setLoading(false))
+    localStorage.setItem("page", page);
+    localStorage.setItem("rowpage", rowPerPage);
+  }, [page, rowPerPage]);
+
+  const paginatedPollList = pollList.data.slice(
+    page * rowPerPage,
+    page * rowPerPage + rowPerPage
+  );
+
+  useEffect(() => {
+    dispatch(AdminPollApi()).then(() => setLoading(false));
   }, [dispatch]);
 
   useEffect(() => {
@@ -52,21 +89,14 @@ const User = () => {
     }));
     toast.success("Your Vote has been Submitted", { autoClose: 1000 });
   };
-  if (
-    loading
-  ) {
-    return (
-      <Backdrop
-      sx={{
-        color: "#fff",
-        zIndex: (theme) => theme.zIndex.drawer + 1,
-      }}
-      open={true}
-    >
-      <CircularProgress color="inherit" />
-    </Backdrop>
-    );
+  if (loading) {
+    return <RefereshAnimation />;
   }
+  const pagee = () => {
+    return page >= Math.ceil(pollList.data.length / rowPerPage)
+      ? Math.max(0, Math.ceil(pollList.data.length / rowPerPage) - 1)
+      : page;
+  };
   return (
     <Box
       sx={{
@@ -88,31 +118,47 @@ const User = () => {
           }}
         >
           {!pollList.loading &&
-            pollList.data.map((dataList) => (
-              dataList.options.length >0 &&
-              <PollItem
-                title={dataList.title}
-                key={dataList._id}
-                InnerOption={dataList.options.map((option, i) => (
-                  <InnerPoll
-                    option={option.option}
-                    key={i}
-                    votes={
-                      <input
-                        type="radio"
-                        name={dataList._id}
-                        style={{ cursor: "pointer" }}
-                        onChange={() =>
-                          VoteChange(dataList.title, dataList._id, option.option)
+            paginatedPollList.map(
+              (dataList) =>
+                dataList.options.length > 0 && (
+                  <PollItem
+                    title={dataList.title}
+                    key={dataList._id}
+                    InnerOption={dataList.options.map((option, i) => (
+                      <InnerPoll
+                        option={option.option}
+                        key={i}
+                        votes={
+                          <input
+                            type="radio"
+                            name={dataList._id}
+                            style={{ cursor: "pointer" }}
+                            onChange={() =>
+                              VoteChange(
+                                dataList.title,
+                                dataList._id,
+                                option.option
+                              )
+                            }
+                            disabled={disabledOptions[dataList.title]}
+                          />
                         }
-                        disabled={disabledOptions[dataList.title]}
                       />
-                    }
+                    ))}
                   />
-                ))}
-              />
-            ))}
+                )
+            )}
         </Box>
+        <TablePagination
+          component="div"
+          rowsPerPageOptions={rowsPerPageOptions}
+          count={pollList.data.length}
+          page={pagee()}
+          rowsPerPage={rowPerPage}
+          onPageChange={handlePageChange}
+          onRowsPerPageChange={handleRowPerPageChange}
+          sx={{ display: "flex", justifyContent: "center", mt: "10px" }}
+        />
         <Button variant="contained" onClick={() => logout()}>
           Log Out
         </Button>
