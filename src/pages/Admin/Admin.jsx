@@ -7,7 +7,7 @@ import {
   TablePagination,
   Typography,
 } from "@mui/material";
-import { NavLink, Link, useNavigate } from "react-router-dom";
+import { NavLink, Link, useNavigate, Outlet } from "react-router-dom";
 import PollItem from "../../components/PollItem";
 import InnerPoll from "../../components/InnerPoll";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -126,13 +126,13 @@ const Admin = () => {
       </Box>
       <NavLink
         style={{ textDecoration: "none", color: "black" }}
-        to={"/addPoll"}
+        to={"addPoll"}
       >
         <Typography variant="h5" textAlign={"center"}>
           Add Poll +
         </Typography>
       </NavLink>
-
+      <Outlet/>
       <Box
         sx={{
           height: "70%",

@@ -5,7 +5,7 @@ import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
 import { useFormik } from "formik";
 import { AddPollApi, resetReducer } from "../../redux/Slices/AddPoll";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, Outlet, useNavigate } from "react-router-dom";
 import { dispatch } from "../../redux/store";
 const AddPoll = () => {
   const navigate = useNavigate();
@@ -71,7 +71,7 @@ const AddPoll = () => {
     },
   });
   return (
-    <Box className="formBodyStyle">
+    <Box className="formBodyStyle"sx={{position:'absolute',zIndex:'1',top:'0'}}>
       <form onSubmit={formik.handleSubmit}>
         <Stack direction={"column"} spacing={2} className="form_container">
           <Typography variant="h4" sx={{ textAlign: "center" }}>
@@ -126,6 +126,7 @@ const AddPoll = () => {
         </Stack>
       </form>
       <ToastContainer />
+      <Outlet/>
     </Box>
   );
 };

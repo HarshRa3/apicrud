@@ -39,7 +39,7 @@ const SignUp = () => {
     } else if (signupSlice.data.error === 0) {
       setButtonDisable(true);
       dispatch(signupResetReducer());
-      location("/signIn", { state: formik.values });
+      location("/", { state: formik.values });
     }
   }, [signupSlice.isSuccess]);
 
