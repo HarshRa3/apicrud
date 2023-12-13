@@ -64,7 +64,7 @@ const Admin = () => {
       setOptionData(option);
     }
   };
-
+  
   const deleteTitleData = (titleID) => {
     dispatch(DeleteTitleApi(titleID));
     setDeleteId(titleID);
@@ -111,7 +111,15 @@ const Admin = () => {
       ? Math.max(0, Math.ceil(pollList.data.length / rowPerPage) - 1)
       : page;
   };
-
+  const Authentication=()=>{
+    const token=localStorage.getItem('token')
+    const role=localStorage.getItem('role')
+    if(token && role==='Admin'){
+      return <Outlet/>
+    }
+    else {}
+  }
+  
   return (
     <Box
       sx={{
@@ -132,7 +140,6 @@ const Admin = () => {
           Add Poll +
         </Typography>
       </NavLink>
-      <Outlet/>
       <Box
         sx={{
           height: "70%",
@@ -147,7 +154,7 @@ const Admin = () => {
               title={dataList.title}
               key={dataList._id}
               EditTitle={
-                <Link to={`EditTitle/${dataList._id}`} state={dataList.title}>
+                <Link to={`EditTitle/${dataList._id}`} style={{color:'black'}} state={dataList.title}>
                   <EditIcon />
                 </Link>
               }
@@ -200,6 +207,7 @@ const Admin = () => {
             />
           ))}
       </Box>
+      {Authentication()}
       <TablePagination
         component="div"
         rowsPerPageOptions={rowsPerPageOptions}

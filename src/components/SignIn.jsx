@@ -25,7 +25,7 @@ const SignIn = () => {
       localStorage.setItem("token", signinSlice.data.token);
       localStorage.setItem("role", decode.role);
       dispatch(resetReducer());
-      if (decode.role === "Guest") {
+      if (decode.role === "Guest"  ) {
         navigate("/userPoll");
       } else if (decode.role === "Admin") {
         navigate("/admin");
@@ -55,14 +55,23 @@ const SignIn = () => {
       } catch (error) {}
     },
   });
-
   useEffect(() => {
     if (formik.values.name && formik.values.password) {
       ref.current.click();
     }
     navigate("/");
-    localStorage.clear();
+    // localStorage.clear();
   }, [autoSignin]);
+  
+  let token = localStorage.getItem('token');
+  let role = localStorage.getItem('role');
+  useEffect(()=>{
+    if(token){
+      if(role==='Admin'){
+        navigate('/admin');
+      }
+    }
+  },[])
 
   return (
     <>

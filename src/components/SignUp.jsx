@@ -11,7 +11,7 @@ import {
 } from "@mui/material";
 import { useFormik } from "formik";
 import React, { useEffect, useState } from "react";
-import { NavLink, useNavigate } from "react-router-dom";
+import { NavLink, Navigate, useNavigate } from "react-router-dom";
 import { signUpSchema } from "../schemas";
 import "../components/stylecss/style.css";
 import { useSelector } from "react-redux";
@@ -42,6 +42,7 @@ const SignUp = () => {
       location("/", { state: formik.values });
     }
   }, [signupSlice.isSuccess]);
+
 
   const formik = useFormik({
     initialValues: {
@@ -170,7 +171,7 @@ const SignUp = () => {
           <Box>
             <NavLink
               style={{ color: "#1565c0" }}
-              to={"/signIn"}
+              to={"/"}
               variant="body2"
             >
               Already have an account? Sign in

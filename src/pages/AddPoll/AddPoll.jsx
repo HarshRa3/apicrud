@@ -71,7 +71,7 @@ const AddPoll = () => {
     },
   });
   return (
-    <Box className="formBodyStyle"sx={{position:'absolute',zIndex:'1',top:'0'}}>
+    <Box className="formBodyStyle">
       <form onSubmit={formik.handleSubmit}>
         <Stack direction={"column"} spacing={2} className="form_container">
           <Typography variant="h4" sx={{ textAlign: "center" }}>

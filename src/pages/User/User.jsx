@@ -106,8 +106,8 @@ const User = () => {
         bgcolor: "#63cdda75",
       }}
     >
-      <Box sx={{ textAlign: "center" }}>
-        <Typography variant="h3">Welcome User Poll</Typography>
+      <Box sx={{ textAlign: "center",width:'95%',margin:'auto' }}>
+        <Typography variant="h5"sx={{margin:'20px'}}>Welcome User Poll</Typography>
         <Box
           sx={{
             height: "600px",
