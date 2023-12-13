@@ -1,6 +1,5 @@
 import { Box, Stack, Typography } from "@mui/material";
 import React from "react";
-// import EditIcon from "@mui/icons-material/Edit";
 const PollItem = ({title,InnerOption,deleteTitle,AddTitle,EditTitle}) => {
   return (
     <>
@@ -8,7 +7,7 @@ const PollItem = ({title,InnerOption,deleteTitle,AddTitle,EditTitle}) => {
         direction={"column"}
         spacing={1}
         sx={{
-          width: "90%",
+          width: "95%",
           margin: "10px auto",
           padding: "10px",
           bgcolor: "#546de5",

@@ -13,7 +13,7 @@ import { dispatch } from "../redux/store";
 
 const SignIn = () => {
   const ref = useRef(null);
-  const [autoSignin,setAutoSignin]=useState(false)
+  const [autoSignin, setAutoSignin] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
   const [buttonDisable, setButtonDisable] = useState(false);
@@ -25,8 +25,7 @@ const SignIn = () => {
       localStorage.setItem("token", signinSlice.data.token);
       localStorage.setItem("role", decode.role);
       dispatch(resetReducer());
-      if (decode.role === "Guest") {
-
+      if (decode.role === "Guest"  ) {
         navigate("/userPoll");
       } else if (decode.role === "Admin") {
         navigate("/admin");
@@ -47,22 +46,35 @@ const SignIn = () => {
     },
     validationSchema: signInScheema,
     onSubmit: async (values) => {
-       try {
+      try {
         if (!signinSlice.data.token) {
-         dispatch(resetReducer());
+          dispatch(resetReducer());
         }
         await dispatch(signInApi(values));
-        setAutoSignin(true)
+        setAutoSignin(true);
       } catch (error) {}
     },
   });
-
   useEffect(() => {
     if (formik.values.name && formik.values.password) {
       ref.current.click();
     }
-    navigate('/')
+    navigate("/");
+    // localStorage.clear();
   }, [autoSignin]);
+  
+  let token = localStorage.getItem('token');
+  let role = localStorage.getItem('role');
+  useEffect(()=>{
+    if(token){
+      if(role==='Admin'){
+        navigate('/admin');
+      }
+      else{
+        navigate('/userPoll')
+      }
+    }
+  },[token,role])
 
   return (
     <>
@@ -92,10 +104,8 @@ const SignIn = () => {
                   {formik.errors.name &&
                     formik.touched.name &&
                     formik.errors.name}
-    
                 </Typography>
               }
-
             />
             <Typography variant="h6" sx={{ mb: "10px", textAlign: "left" }}>
               Password :
@@ -121,7 +131,12 @@ const SignIn = () => {
                 <CircularProgress />
               </Box>
             ) : (
-              <Button ref={ref} variant="contained" type="submit" disabled={buttonDisable}>
+              <Button
+                ref={ref}
+                variant="contained"
+                type="submit"
+                disabled={buttonDisable}
+              >
                 Sign In
               </Button>
             )}

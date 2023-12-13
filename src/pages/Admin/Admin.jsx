@@ -7,7 +7,7 @@ import {
   TablePagination,
   Typography,
 } from "@mui/material";
-import { NavLink, Link, useNavigate } from "react-router-dom";
+import { NavLink, Link, useNavigate, Outlet } from "react-router-dom";
 import PollItem from "../../components/PollItem";
 import InnerPoll from "../../components/InnerPoll";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -64,7 +64,7 @@ const Admin = () => {
       setOptionData(option);
     }
   };
-
+  
   const deleteTitleData = (titleID) => {
     dispatch(DeleteTitleApi(titleID));
     setDeleteId(titleID);
@@ -111,7 +111,20 @@ const Admin = () => {
       ? Math.max(0, Math.ceil(pollList.data.length / rowPerPage) - 1)
       : page;
   };
+  const Authentication=()=>{
+    const token=localStorage.getItem('token')
+    const role=localStorage.getItem('role')
+    if(token){
 
+      if(role==='Admin'){
+        return <Outlet/>
+      }else if( role==='user'){
+        navigate('/userPoll')
+      }
+    }
+
+    }
+  
   return (
     <Box
       sx={{
@@ -126,13 +139,12 @@ const Admin = () => {
       </Box>
       <NavLink
         style={{ textDecoration: "none", color: "black" }}
-        to={"/addPoll"}
+        to={"addPoll"}
       >
         <Typography variant="h5" textAlign={"center"}>
           Add Poll +
         </Typography>
       </NavLink>
-
       <Box
         sx={{
           height: "70%",
@@ -147,7 +159,7 @@ const Admin = () => {
               title={dataList.title}
               key={dataList._id}
               EditTitle={
-                <Link to={`EditTitle/${dataList._id}`} state={dataList.title}>
+                <Link to={`EditTitle/${dataList._id}`} style={{color:'black'}} state={dataList.title}>
                   <EditIcon />
                 </Link>
               }
@@ -200,6 +212,7 @@ const Admin = () => {
             />
           ))}
       </Box>
+      {Authentication()}
       <TablePagination
         component="div"
         rowsPerPageOptions={rowsPerPageOptions}

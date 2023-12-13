@@ -5,7 +5,7 @@ import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
 import { useFormik } from "formik";
 import { AddPollApi, resetReducer } from "../../redux/Slices/AddPoll";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, Outlet, useNavigate } from "react-router-dom";
 import { dispatch } from "../../redux/store";
 const AddPoll = () => {
   const navigate = useNavigate();
@@ -126,6 +126,7 @@ const AddPoll = () => {
         </Stack>
       </form>
       <ToastContainer />
+      <Outlet/>
     </Box>
   );
 };
