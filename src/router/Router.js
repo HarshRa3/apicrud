@@ -22,8 +22,8 @@ const Router = () => {
       >
         
       </Route>
-      <Route exact path="/signup" element={<SignUp />} />
-      <Route exact
+      <Route  path="/signup" element={<SignUp />} />
+      <Route 
         path="/admin"
         element={
           <Protected>

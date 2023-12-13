@@ -70,8 +70,11 @@ const SignIn = () => {
       if(role==='Admin'){
         navigate('/admin');
       }
+      else{
+        navigate('/userPoll')
+      }
     }
-  },[])
+  },[token,role])
 
   return (
     <>

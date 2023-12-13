@@ -114,11 +114,16 @@ const Admin = () => {
   const Authentication=()=>{
     const token=localStorage.getItem('token')
     const role=localStorage.getItem('role')
-    if(token && role==='Admin'){
-      return <Outlet/>
+    if(token){
+
+      if(role==='Admin'){
+        return <Outlet/>
+      }else if( role==='user'){
+        navigate('/userPoll')
+      }
     }
-    else {}
-  }
+
+    }
   
   return (
     <Box
